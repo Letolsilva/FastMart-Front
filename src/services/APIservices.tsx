@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 const API_URL = "http://localhost:3333";
 
 export async function getFunction() {
