@@ -3,7 +3,19 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
+import { toast } from "react-toastify";
 import { CPFInput } from "../../components/CPFInput";
+
+
+const customToastStyle = {
+  backgroundColor: '#f8fafc',
+  color: '#020617',
+  fontSize: '16px',
+};
+
+const customProgressStyle = {
+  background: '#380650',
+};
 
 const SignupSchema = yup.object().shape({
   nome: yup.string().required("Nome é obrigatório"),
@@ -28,7 +40,12 @@ export const SignUp: React.FC = () => {
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      toast.success("Cadastro Concluido!",{
+        style: customToastStyle,
+        progressStyle: customProgressStyle
+      });
+      // Exibindo os valores no console para depuração
+      console.log(JSON.stringify(values, null, 2));
     },
   });
 
@@ -113,6 +130,7 @@ export const SignUp: React.FC = () => {
                 formik.errors.cpf && formik.touched.cpf ? "border-red-500" : ""
               }
             />
+
             {formik.errors.cpf && formik.touched.cpf && (
               <p className="text-red-500 text-xs mt-1">{formik.errors.cpf}</p>
             )}
