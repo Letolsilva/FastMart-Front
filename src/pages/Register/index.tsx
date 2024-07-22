@@ -38,7 +38,7 @@ export const Register: React.FC = () => {
 
   return (
     <div>
-      <Header />
+      <Header showIcon={true} />
       <div className="fixed inset-0 flex items-center justify-center bg-gray-200 bg-opacity-50">
         <div className="max-w-6xl mx-auto p-8 bg-white border border-gray-300 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-primary">
