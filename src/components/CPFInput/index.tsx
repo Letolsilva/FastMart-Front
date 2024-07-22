@@ -1,5 +1,4 @@
 import React from "react";
-import * as yup from "yup";
 
 interface CPFInputProps {
   title: string;
