@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FiUser } from "react-icons/fi";
-import { BiChevronLeft } from "react-icons/bi"; // Importa o ícone de seta
+import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
