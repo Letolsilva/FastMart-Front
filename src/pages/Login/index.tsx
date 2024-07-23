@@ -2,6 +2,7 @@ import React from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
+import { PostLogin } from "../../services/APIservices";
 
 const LoginSchema = yup.object().shape({
     email: yup.string().required("E-mail é obrigatório"),
@@ -15,8 +16,9 @@ export const Login: React.FC = () => {
       password: "",
     },
     validationSchema: LoginSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      await PostLogin(values);
+      
     },
   });
   
@@ -67,13 +69,12 @@ export const Login: React.FC = () => {
                 </p>
               )}
             </div>
-           
-            <button
-              type="submit"
-              className="col-span-2 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary transition-colors mt-14"
-            >
-              Entrar
-            </button>
+              <button
+                type="submit"
+                className="col-span-2 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary transition-colors mt-14"
+              >
+                Entrar
+              </button>
           </form>
         </div>
       </div>
