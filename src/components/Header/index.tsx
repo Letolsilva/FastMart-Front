@@ -5,9 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   showIcon?: boolean;
+  backRoute?: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ showIcon = false }) => {
+export const Header: React.FC<HeaderProps> = ({
+  showIcon = false,
+  backRoute,
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -47,11 +51,11 @@ export const Header: React.FC<HeaderProps> = ({ showIcon = false }) => {
   return (
     <header className="relative z-50 bg-white border-b border-gray-300 shadow-lg p-4 flex items-center justify-between">
       <div className="flex items-center">
-        {showIcon && (
+        {showIcon && backRoute && (
           <BiChevronLeft
             size={24}
             className="text-gray-500 mr-4 cursor-pointer hover:text-gray-700"
-            onClick={() => navigate("/main")}
+            onClick={() => navigate(backRoute)}
           />
         )}
         <div className="flex items-center justify-center flex-grow hover:animate-pulse">

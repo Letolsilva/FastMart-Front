@@ -1,14 +1,22 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
+import { Employee } from "../pages/ListEmployees";
 const API_URL = "http://localhost:3333";
 
-export async function getFunction() {
+export async function fetchEmployees(): Promise<Employee[]> {
   try {
-    const response = await axios.get(`${API_URL}/users`);
-    return response.data;
+    const response: AxiosResponse<{ users: Employee[] }> = await axios.get(
+      `${API_URL}/users`
+    );
+
+    if (Array.isArray(response.data.users)) {
+      return response.data.users;
+    } else {
+      throw new Error("A resposta da API não é um array");
+    }
   } catch (error) {
     console.error("Erro ao buscar dados da API:", error);
-    throw error;
+    throw new Error("Erro ao buscar dados da API");
   }
 }
 
@@ -23,7 +31,7 @@ export async function PostFunction(data: any) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 400) {
-          toast.error("CPF ou email já cadastrado");
+          toast.error("Erro ao realizar cadastrado");
         } else if (error.response.status === 500) {
           toast.error("Erro ao cadastrar usuário");
         }
