@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FiUser } from "react-icons/fi";
 import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import purpleIcon from '/purple-icon.png';
 
 interface HeaderProps {
   showIcon?: boolean;
@@ -60,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
         )}
         <div className="flex items-center justify-center flex-grow hover:animate-pulse">
           <img
-            src="public/purple-icon.png"
+            src={purpleIcon}
             className="w-12 h-10 transition-transform duration-200 transform hover:scale-110 cursor-pointer"
             alt="Purple Icon"
           />
