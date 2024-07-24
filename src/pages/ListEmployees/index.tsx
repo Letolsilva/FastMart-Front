@@ -4,6 +4,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Header } from "../../components/Header";
 import { Link } from "react-router-dom";
 import { fetchEmployees } from "../../services/APIservices";
+import SearchBar from "../../components/SearchBar";
 
 export interface Employee {
   id: number;
@@ -23,6 +24,7 @@ const EmployeesList: React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const loadEmployees = async () => {
@@ -39,6 +41,14 @@ const EmployeesList: React.FC = () => {
     loadEmployees();
   }, []);
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredEmployees = employees.filter((employee) =>
+    employee.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
     return <p>Carregando...</p>;
   }
@@ -51,11 +61,18 @@ const EmployeesList: React.FC = () => {
     <div className="p-4">
       <Header showIcon={true} backRoute="/main" />
       <div className="border border-gray-300 p-10 rounded-lg shadow-md mt-5">
-        <h1 className="text-2xl font-bold mb-4 text-purple-800">
-          Funcionários Cadastrados
-        </h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold text-purple-800">
+            Funcionários Cadastrados
+          </h1>
+          <SearchBar
+            searchTerm={searchTerm}
+            onSearchChange={handleSearchChange}
+            placeholder="Pesquisar Funcionário"
+          />
+        </div>
         <ul className="space-y-2">
-          {employees.map((employee) => (
+          {filteredEmployees.map((employee) => (
             <Link
               key={employee.id}
               to={`/dados-funcionario/${employee.id}`}
