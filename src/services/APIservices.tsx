@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Employee } from "../pages/ListEmployees";
 const API_URL = "http://localhost:3333";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export async function fetchEmployees(): Promise<Employee[]> {
   try {
@@ -45,13 +45,15 @@ export async function PostFunction(data: any) {
   }
 }
 
-export async function PostLogin(data: any){
+export async function PostLogin(
+  data: any,
+  navigate: ReturnType<typeof useNavigate>
+) {
   try {
     const response = await axios.post(`${API_URL}/users/login`, data);
     if (response.status === 200) {
       toast.success("Usuário logado com sucesso!");
-      const navigate = useNavigate();
-      navigate("/main")
+      navigate("/main");
     }
     return response.data;
   } catch (error: unknown) {
@@ -59,7 +61,7 @@ export async function PostLogin(data: any){
       if (error.response) {
         if (error.response.status === 400) {
           toast.error("E-mail ou senha incorretos!");
-        } else if (error.response.status === 401) {
+        } else if (error.response.status === 403) {
           toast.error("Usuário já logado!");
         }
       } else {
