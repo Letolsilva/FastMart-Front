@@ -4,7 +4,7 @@ import { fetchJustOneEmployee } from "../../services/APIservices";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
 import { CPFInput } from "../../components/CPFInput";
-import { updateEmployeeData } from "../../services/APIservices";
+//import { updateEmployeeData } from "../../services/APIservices";
 import { useEffect, useState } from "react";
 import { Employee } from "../ListEmployees";
 
