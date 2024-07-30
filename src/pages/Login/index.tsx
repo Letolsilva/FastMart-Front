@@ -18,7 +18,6 @@ export const Login: React.FC = () => {
     validationSchema: LoginSchema,
     onSubmit: async (values) => {
       await PostLogin(values);
-      
     },
   });
   

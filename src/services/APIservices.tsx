@@ -12,13 +12,57 @@ export async function fetchEmployees(): Promise<Employee[]> {
 
     if (Array.isArray(response.data.users)) {
       return response.data.users;
-    } else {
+    }
+    else {
       throw new Error("A resposta da API não é um array");
     }
   } catch (error) {
     console.error("Erro ao buscar dados da API:", error);
     throw new Error("Erro ao buscar dados da API");
   }
+}
+
+export async function fetchJustOneEmployee(id: number): Promise<Employee | null> {
+  try{
+    const response: AxiosResponse<{users: Employee[]}> = await axios.get(`${API_URL}/users`);
+    const employee = response.data.users.find(user => user.id === id);
+    return employee || null;
+  }
+  catch(error){
+    console.error('Erro ao buscar o funcionário:', error);
+    return null;
+  }
+}
+
+export async function updateEmployeeData(data: Employee) {
+  try{
+    const response = await axios.put(`${API_URL}/users/:${data.id}`,data);
+    if(response.status === 200){
+      toast.success("Dados Atualizados com sucesso!");
+    }
+    return response.data;
+  } 
+  catch(error: unknown){
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 502) {
+          toast.error(error.message);
+        } else if (error.response.status === 500) {
+          toast.error(error.message);
+        }
+        else if (error.response.status === 503) {
+          toast.error(error.message);
+        }
+        else if (error.response.status === 404) {
+          toast.error(error.message);
+        }
+      } else {
+        toast.error("Erro ao buscar dados da API");
+      }
+    }
+    throw error;
+  }
+
 }
 
 export async function PostFunction(data: any) {

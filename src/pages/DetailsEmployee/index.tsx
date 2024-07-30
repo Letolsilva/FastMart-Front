@@ -22,9 +22,9 @@ const EmployeeDetails: React.FC = () => {
         setLoading(false);
       }
     };
-
     loadEmployees();
   }, []);
+
   useEffect(() => {
     if (employees.length > 0) {
       const foundEmployee = employees.find((emp) => emp.id === parseInt(id!));

@@ -4,6 +4,7 @@ import { Register } from "../pages/RegisterEmployees";
 import { Login } from "../pages/Login";
 import EmployeesList from "../pages/ListEmployees";
 import EmployeeDetails from "../pages/DetailsEmployee";
+import EditPage from "../pages/Edit";
 
 export const AppRouter = () => {
   return (
@@ -13,6 +14,7 @@ export const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/lista-funcionarios" element={<EmployeesList />} />
       <Route path="/dados-funcionario/:id" element={<EmployeeDetails />} />
+      <Route path="/edit/:id" element={<EditPage/>} />
     </Routes>
   );
 };

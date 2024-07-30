@@ -81,9 +81,9 @@ const EmployeesList: React.FC = () => {
               <li className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                 {employee.name}
                 <div className="flex space-x-5">
-                  <button className="text-neutral-500 hover:text-purple-800">
+                  <Link to={`/edit/${employee.id}`} className="text-neutral-500 hover:text-purple-800">
                     <i className="fas fa-edit"></i>
-                  </button>
+                  </Link>
                   <button className="text-neutral-500 hover:text-purple-800">
                     <i className="fas fa-trash"></i>
                   </button>
