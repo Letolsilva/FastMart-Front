@@ -3,6 +3,8 @@ import { FiUser } from "react-icons/fi";
 import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import purpleIcon from '/purple-icon.png';
+import { fetchEmployees, PostLogout } from "../../services/APIservices";
+import { Employee } from "../../pages/ListEmployees";
 
 interface HeaderProps {
   showIcon?: boolean;
@@ -16,10 +18,29 @@ export const Header: React.FC<HeaderProps> = ({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [loggedInEmployee, setLoggedInEmployee] = useState<Employee | null>(null);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  useEffect(() => {
+    const fetchLoggedInUser = async () => {
+      try {
+        const employees = await fetchEmployees();
+        const loggedUser = employees.find(emp => emp.is_logged);
+        setLoggedInEmployee(loggedUser || null);
+      } catch (error) {
+        console.error("Failed to fetch employees:", error);
+      }
+    };
+
+    fetchLoggedInUser();
+  }, []);
+
+  const handleLogout = async () => {
     setRedirect(true);
+    if(loggedInEmployee){
+      console.log(loggedInEmployee.id);
+      //await PostLogout(loggedInEmployee.id, navigate);
+    }
   };
 
   const handleClickOutside = (event: MouseEvent) => {

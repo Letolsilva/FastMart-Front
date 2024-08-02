@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { PostLogin } from "../../services/APIservices";
+import { useNavigate } from 'react-router-dom';
 
 const LoginSchema = yup.object().shape({
     email: yup.string().required("E-mail é obrigatório"),
@@ -10,6 +11,7 @@ const LoginSchema = yup.object().shape({
 });
 
 export const Login: React.FC = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -17,7 +19,7 @@ export const Login: React.FC = () => {
     },
     validationSchema: LoginSchema,
     onSubmit: async (values) => {
-      await PostLogin(values);
+      await PostLogin(values, navigate);
     },
   });
   
