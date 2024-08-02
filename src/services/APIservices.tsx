@@ -116,3 +116,27 @@ export async function PostLogin(
     throw error;
   }
 }
+
+export async function PostLogout(
+  id: any,
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    const response = await axios.post(`${API_URL}/users/logout/:${id}`);
+    if (response.status === 200) {
+      toast.success("Usuário deslogado com sucesso!");
+      navigate("/login");
+    }
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 500) {
+          toast.error("Erro ao deslogar!");
+        } 
+      }
+    }
+
+    throw error;
+  }
+}
