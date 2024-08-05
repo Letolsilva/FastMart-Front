@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
     setRedirect(true);
     if(loggedInEmployee){
       console.log(loggedInEmployee.id);
-      //await PostLogout(loggedInEmployee.id, navigate);
+      await PostLogout(loggedInEmployee.id, navigate);
     }
   };
 
