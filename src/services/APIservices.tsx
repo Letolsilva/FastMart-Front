@@ -91,8 +91,7 @@ export async function PostFunction(data: any) {
 
 export async function PostLogin(
   data: any,
-  navigate: ReturnType<typeof useNavigate>
-) {
+  navigate: ReturnType<typeof useNavigate>){
   try {
     const response = await axios.post(`${API_URL}/users/login`, data);
     if (response.status === 200) {
@@ -100,7 +99,8 @@ export async function PostLogin(
       navigate("/main");
     }
     return response.data;
-  } catch (error: unknown) {
+  } 
+  catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -112,7 +112,6 @@ export async function PostLogin(
         toast.error("Erro ao buscar dados da API");
       }
     }
-
     throw error;
   }
 }
