@@ -4,7 +4,7 @@ import { fetchJustOneEmployee } from "../../services/APIservices";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
 import { CPFInput } from "../../components/CPFInput";
-//import { updateEmployeeData } from "../../services/APIservices";
+import { updateEmployeeData } from "../../services/APIservices";
 import { useEffect, useState } from "react";
 import { Employee } from "../ListEmployees";
 
@@ -51,11 +51,8 @@ const EditPage: React.FC = () => {
     
     const handleSubmit = async () => {
         if (employee) {
-            try {
-                // tratar a parte do token para usar ...
-                //await updateEmployeeData (employee);
-                console.log(employee);
-                alert("Dados atualizados com sucesso!");
+            try{
+                await updateEmployeeData(employee);
             } catch (error) {
                 alert("Erro ao atualizar os dados.");
             }

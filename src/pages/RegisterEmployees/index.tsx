@@ -19,6 +19,7 @@ const RegisterSchema = yup.object().shape({
 });
 
 export const Register: React.FC = () => {
+  
   const formik = useFormik({
     initialValues: {
       name: "",

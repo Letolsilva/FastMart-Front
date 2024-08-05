@@ -36,7 +36,12 @@ export async function fetchJustOneEmployee(id: number): Promise<Employee | null>
 
 export async function updateEmployeeData(data: Employee) {
   try{
-    const response = await axios.put(`${API_URL}/users/:${data.id}`,data);
+    const token = localStorage.getItem('authToken');
+    const response = await axios.put(`${API_URL}/users/${data.id}`,data,{
+      headers:{
+        'Authorization': `Bearer ${token}`
+      }
+    });
     if(response.status === 200){
       toast.success("Dados Atualizados com sucesso!");
     }
@@ -62,7 +67,6 @@ export async function updateEmployeeData(data: Employee) {
     }
     throw error;
   }
-
 }
 
 export async function PostFunction(data: any) {
@@ -95,6 +99,8 @@ export async function PostLogin(
   try {
     const response = await axios.post(`${API_URL}/users/login`, data);
     if (response.status === 200) {
+      const {token} = response.data;
+      localStorage.setItem('authToken', token);
       toast.success("Usuário logado com sucesso!");
       navigate("/main");
     }

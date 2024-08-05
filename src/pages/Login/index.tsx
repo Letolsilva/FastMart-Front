@@ -49,7 +49,6 @@ export const Login: React.FC = () => {
                   {formik.errors.email}
                 </p>
               )}
-  
               <TextInput
                 title="Senha"
                 placeholder="Digite sua senha"
