@@ -127,7 +127,13 @@ export async function PostLogout(
   navigate: ReturnType<typeof useNavigate>
 ) {
   try {
-    const response = await axios.post(`${API_URL}/users/logout/:${id}`);
+    console.log(id);
+    const token = localStorage.getItem('authToken');
+    const response = await axios.post(`${API_URL}/users/logout/${id}`,{},{
+      headers:{
+        'Authorization': `Bearer ${token}`
+      }
+    });
     if (response.status === 200) {
       toast.success("Usuário deslogado com sucesso!");
       navigate("/login");
@@ -140,6 +146,36 @@ export async function PostLogout(
           toast.error("Erro ao deslogar!");
         } 
       }
+    }
+
+    throw error;
+  }
+}
+
+export async function deleteFunction(id: any, navigate: ReturnType<typeof useNavigate>){
+  try{
+    const token = localStorage.getItem('authToken');
+    const response = await axios.delete(`${API_URL}/users/${id}`,{
+      headers:{
+        'Authorization': `Bearer ${token}`,
+      }
+    });
+    if (response.status === 200) {
+      toast.success("Usuário deletado com sucesso!");
+      navigate("/main");
+    }
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 404) {
+          toast.error("Erro ao deletar!");
+        } 
+        else if(error.response.status === 500){
+          toast.error("Erro interno!");
+        }
+      }
+      navigate("/lista-funcionarios")
     }
 
     throw error;

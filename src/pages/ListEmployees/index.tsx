@@ -3,8 +3,10 @@ import "tailwindcss/tailwind.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Header } from "../../components/Header";
 import { Link } from "react-router-dom";
-import { fetchEmployees } from "../../services/APIservices";
+import { deleteFunction, fetchEmployees } from "../../services/APIservices";
 import SearchBar from "../../components/SearchBar";
+import { useNavigate } from "react-router-dom";
+//import { toast } from "react-toastify";
 
 export interface Employee {
   id: number;
@@ -25,6 +27,7 @@ const EmployeesList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadEmployees = async () => {
@@ -57,6 +60,10 @@ const EmployeesList: React.FC = () => {
     return <p>{error}</p>;
   }
 
+  const handleDelete = async (id: any) => {
+    await deleteFunction(id,navigate);
+  }
+
   return (
     <div className="p-4">
       <Header showIcon={true} backRoute="/main" />
@@ -84,7 +91,14 @@ const EmployeesList: React.FC = () => {
                   <Link to={`/edit/${employee.id}`} className="text-neutral-500 hover:text-purple-800">
                     <i className="fas fa-edit"></i>
                   </Link>
-                  <button className="text-neutral-500 hover:text-purple-800">
+                  <button className="text-neutral-500 hover:text-purple-800"
+                    onClick={() => {
+                      const confirmed = window.confirm(`Você quer mesmo deletar ${employee.name}?`);
+                      if (confirmed) {
+                        handleDelete(employee.id);
+                      }
+                    }}
+                  >
                     <i className="fas fa-trash"></i>
                   </button>
                 </div>
