@@ -5,18 +5,18 @@ const API_URL = "http://localhost:3333";
 import { useNavigate } from "react-router-dom";
 
 export async function fetchEmployees(): Promise<Employee[]> {
-  try {
+  try{
     const response: AxiosResponse<{ users: Employee[] }> = await axios.get(
       `${API_URL}/users`
     );
-
     if (Array.isArray(response.data.users)) {
       return response.data.users;
     }
     else {
       throw new Error("A resposta da API não é um array");
     }
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Erro ao buscar dados da API:", error);
     throw new Error("Erro ao buscar dados da API");
   }
@@ -76,7 +76,8 @@ export async function PostFunction(data: any) {
       toast.success("Usuário cadastrado com sucesso!");
     }
     return response.data;
-  } catch (error: unknown) {
+  } 
+  catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 400) {

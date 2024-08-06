@@ -7,6 +7,8 @@ import { CPFInput } from "../../components/CPFInput";
 import { updateEmployeeData } from "../../services/APIservices";
 import { useEffect, useState } from "react";
 import { Employee } from "../ListEmployees";
+import * as yup from "yup";
+import { toast } from "react-toastify";
 
 const EditPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -22,7 +24,19 @@ const EditPage: React.FC = () => {
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
-    
+
+    const number11 = /^\d{11}$/;
+
+    const RegisterSchema = yup.object().shape({
+        name: yup.string().required("Nome é obrigatório"),
+        email: yup.string().email("Email inválido").required("Email é obrigatório"),
+        code: yup.string().required("Código é obrigatório"),
+        birthday_date: yup.string().required("Data de nascimento é obrigatória"),
+        phone: yup.string().matches(number11, "Telefone inválido").required("Telefone é obrigatório"),
+        education: yup.string().required("Educação é obrigatória"),
+        cpf: yup.string().matches(number11, "CPF inválido").required("CPF é obrigatório"),
+    });
+
     useEffect(() => {
         const loadEmployee = async () => {
             try{
@@ -41,6 +55,7 @@ const EditPage: React.FC = () => {
         loadEmployee();
     }, [employeeId]);
 
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setEmployee((prevEmployee) => {
@@ -48,18 +63,22 @@ const EditPage: React.FC = () => {
             return { ...prevEmployee, [name]: value };
         });
     };
-    
+   
     const handleSubmit = async () => {
         if (employee) {
-            try{
+            try {
+                await RegisterSchema.validate(employee, { abortEarly: false });
                 await updateEmployeeData(employee);
-            } catch (error) {
-                alert("Erro ao atualizar os dados.");
+            } catch (err) {
+                if (err instanceof yup.ValidationError) {
+                    toast.error(`${err.errors.join(", ")}`);
+                } else {
+                    toast.error("Erro ao atualizar os dados.");
+                }
             }
         }
     };
     
-
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -82,7 +101,6 @@ const EditPage: React.FC = () => {
             <div className="flex items-center justify-center p-4">
                 <div className="w-full max-w-md bg-white border border-gray-300 rounded-lg shadow-lg p-6">
                 <h2 className="text-2xl font-bold mb-6 text-center text-primary"> Editar Dados</h2>
-
                     {employee ? (
                         <div className="space-y-4">
                             <TextInput className="text-gray-700"
