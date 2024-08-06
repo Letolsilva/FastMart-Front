@@ -25,16 +25,17 @@ const EditPage: React.FC = () => {
         return `${year}-${month}-${day}`;
     };
 
-    const number11 = /^\d{11}$/;
+    const phoneRegex = /^(?:\(\d{2}\)\s?\d{5}-\d{4}|\d{11})$/;
+    const cpfRegex = /^(?:\d{11}|\d{3}\.\d{3}\.\d{3}-\d{2}|\d{9}-\d{2})$/; // Aceita três formatos de CPF
 
     const RegisterSchema = yup.object().shape({
         name: yup.string().required("Nome é obrigatório"),
         email: yup.string().email("Email inválido").required("Email é obrigatório"),
         code: yup.string().required("Código é obrigatório"),
         birthday_date: yup.string().required("Data de nascimento é obrigatória"),
-        phone: yup.string().matches(number11, "Telefone inválido").required("Telefone é obrigatório"),
+        phone: yup.string().matches(phoneRegex, "Telefone inválido").required("Telefone é obrigatório"),
         education: yup.string().required("Educação é obrigatória"),
-        cpf: yup.string().matches(number11, "CPF inválido").required("CPF é obrigatório"),
+        cpf: yup.string().matches(cpfRegex, "CPF inválido").required("CPF é obrigatório"),
     });
 
     useEffect(() => {
