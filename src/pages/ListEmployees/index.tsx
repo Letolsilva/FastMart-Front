@@ -61,12 +61,12 @@ const EmployeesList: React.FC = () => {
   }
 
   const handleDelete = async (id: any) => {
-    await deleteFunction(id,navigate);
-  }
+    await deleteFunction(id, navigate);
+  };
 
   return (
     <div className="p-4">
-      <Header showIcon={true} backRoute="/main" />
+      <Header showIcon={true} backRoute="/" />
       <div className="border border-gray-300 p-10 rounded-lg shadow-md mt-5">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-purple-800">
@@ -88,12 +88,18 @@ const EmployeesList: React.FC = () => {
               <li className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                 {employee.name}
                 <div className="flex space-x-5">
-                  <Link to={`/edit/${employee.id}`} className="text-neutral-500 hover:text-purple-800">
+                  <Link
+                    to={`/edit/${employee.id}`}
+                    className="text-neutral-500 hover:text-purple-800"
+                  >
                     <i className="fas fa-edit"></i>
                   </Link>
-                  <button className="text-neutral-500 hover:text-purple-800"
+                  <button
+                    className="text-neutral-500 hover:text-purple-800"
                     onClick={() => {
-                      const confirmed = window.confirm(`Você quer mesmo deletar ${employee.name}?`);
+                      const confirmed = window.confirm(
+                        `Você quer mesmo deletar ${employee.name}?`
+                      );
                       if (confirmed) {
                         handleDelete(employee.id);
                       }

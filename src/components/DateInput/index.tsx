@@ -1,5 +1,3 @@
-// Em DateInput.tsx
-
 import React from "react";
 
 interface DateInputProps {
@@ -16,7 +14,6 @@ export const DateInput: React.FC<DateInputProps> = ({
   placeholder,
   value,
   onChange,
-
   name,
   className,
 }) => {

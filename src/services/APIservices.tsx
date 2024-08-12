@@ -5,60 +5,58 @@ const API_URL = "http://localhost:3333";
 import { useNavigate } from "react-router-dom";
 
 export async function fetchEmployees(): Promise<Employee[]> {
-  try{
+  try {
     const response: AxiosResponse<{ users: Employee[] }> = await axios.get(
       `${API_URL}/users`
     );
     if (Array.isArray(response.data.users)) {
       return response.data.users;
-    }
-    else {
+    } else {
       throw new Error("A resposta da API não é um array");
     }
-  } 
-  catch (error) {
+  } catch (error) {
     console.error("Erro ao buscar dados da API:", error);
     throw new Error("Erro ao buscar dados da API");
   }
 }
 
-export async function fetchJustOneEmployee(id: number): Promise<Employee | null> {
-  try{
-    const response: AxiosResponse<{users: Employee[]}> = await axios.get(`${API_URL}/users`);
-    const employee = response.data.users.find(user => user.id === id);
+export async function fetchJustOneEmployee(
+  id: number
+): Promise<Employee | null> {
+  try {
+    const response: AxiosResponse<{ users: Employee[] }> = await axios.get(
+      `${API_URL}/users`
+    );
+    const employee = response.data.users.find((user) => user.id === id);
     return employee || null;
-  }
-  catch(error){
-    console.error('Erro ao buscar o funcionário:', error);
+  } catch (error) {
+    console.error("Erro ao buscar o funcionário:", error);
     return null;
   }
 }
 
 export async function updateEmployeeData(data: Employee) {
-  try{
-    const token = localStorage.getItem('authToken');
-    const response = await axios.put(`${API_URL}/users/${data.id}`,data,{
-      headers:{
-        'Authorization': `Bearer ${token}`
-      }
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.put(`${API_URL}/users/${data.id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-    if(response.status === 200){
+    if (response.status === 200) {
       toast.success("Dados Atualizados com sucesso!");
     }
     return response.data;
-  } 
-  catch(error: unknown){
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 502) {
           toast.error(error.message);
         } else if (error.response.status === 500) {
           toast.error(error.message);
-        }
-        else if (error.response.status === 503) {
+        } else if (error.response.status === 503) {
           toast.error(error.message);
-        }
-        else if (error.response.status === 404) {
+        } else if (error.response.status === 404) {
           toast.error(error.message);
         }
       } else {
@@ -76,8 +74,7 @@ export async function PostFunction(data: any) {
       toast.success("Usuário cadastrado com sucesso!");
     }
     return response.data;
-  } 
-  catch (error: unknown) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -96,18 +93,18 @@ export async function PostFunction(data: any) {
 
 export async function PostLogin(
   data: any,
-  navigate: ReturnType<typeof useNavigate>){
+  navigate: ReturnType<typeof useNavigate>
+) {
   try {
     const response = await axios.post(`${API_URL}/users/login`, data);
     if (response.status === 200) {
-      const {token} = response.data;
-      localStorage.setItem('authToken', token);
+      const { token } = response.data;
+      localStorage.setItem("authToken", token);
       toast.success("Usuário logado com sucesso!");
-      navigate("/main");
+      navigate("/");
     }
     return response.data;
-  } 
-  catch (error: unknown) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 400) {
@@ -129,12 +126,16 @@ export async function PostLogout(
 ) {
   try {
     console.log(id);
-    const token = localStorage.getItem('authToken');
-    const response = await axios.post(`${API_URL}/users/logout/${id}`,{},{
-      headers:{
-        'Authorization': `Bearer ${token}`
+    const token = localStorage.getItem("authToken");
+    const response = await axios.post(
+      `${API_URL}/users/logout/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    });
+    );
     if (response.status === 200) {
       toast.success("Usuário deslogado com sucesso!");
       navigate("/login");
@@ -145,7 +146,7 @@ export async function PostLogout(
       if (error.response) {
         if (error.response.status === 500) {
           toast.error("Erro ao deslogar!");
-        } 
+        }
       }
     }
 
@@ -153,17 +154,20 @@ export async function PostLogout(
   }
 }
 
-export async function deleteFunction(id: any, navigate: ReturnType<typeof useNavigate>){
-  try{
-    const token = localStorage.getItem('authToken');
-    const response = await axios.delete(`${API_URL}/users/${id}`,{
-      headers:{
-        'Authorization': `Bearer ${token}`,
-      }
+export async function deleteFunction(
+  id: any,
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.delete(`${API_URL}/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     if (response.status === 200) {
       toast.success("Usuário deletado com sucesso!");
-      navigate("/main");
+      navigate("/");
     }
     return response.data;
   } catch (error: unknown) {
@@ -171,12 +175,11 @@ export async function deleteFunction(id: any, navigate: ReturnType<typeof useNav
       if (error.response) {
         if (error.response.status === 404) {
           toast.error("Erro ao deletar!");
-        } 
-        else if(error.response.status === 500){
+        } else if (error.response.status === 500) {
           toast.error("Erro interno!");
         }
       }
-      navigate("/lista-funcionarios")
+      navigate("/lista-funcionarios");
     }
 
     throw error;

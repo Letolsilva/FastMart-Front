@@ -7,19 +7,27 @@ import { CPFInput } from "../../components/CPFInput";
 import { PostFunction } from "../../services/APIservices";
 import { Header } from "../../components/Header";
 
-const RegisterSchema = yup.object().shape({
+export const ValidationUserSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),
-  email: yup.string().required("Email é obrigatório"),
-  password: yup.string().required("Senha é obrigatória"),
+  email: yup.string().email("Email inválido").required("Email é obrigatório"),
   code: yup.string().required("Código é obrigatório"),
-  birthday_date: yup.string().required("Data de nascimento é obrigatório"),
-  phone: yup.string().required("Telefone é obrigatório"),
+  birthday_date: yup.string().required("Data de nascimento é obrigatória"),
+  phone: yup
+    .string()
+    .matches(/^[0-9]{10,11}$/, "Telefone deve ter 10 ou 11 dígitos")
+    .required("Telefone é obrigatório"),
+  password: yup.string().required("Senha é obrigatório"),
   education: yup.string().required("Educação é obrigatória"),
-  cpf: yup.string().required("CPF é obrigatório"),
+  cpf: yup
+    .string()
+    .matches(
+      /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+      "CPF deve estar no formato xxx.xxx.xxx-xx"
+    )
+    .required("CPF é obrigatório"),
 });
 
 export const Register: React.FC = () => {
-  
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -31,7 +39,7 @@ export const Register: React.FC = () => {
       phone: "",
       education: "",
     },
-    validationSchema: RegisterSchema,
+    validationSchema: ValidationUserSchema,
     onSubmit: async (values) => {
       await PostFunction(values);
     },
@@ -39,7 +47,7 @@ export const Register: React.FC = () => {
 
   return (
     <div>
-      <Header showIcon={true} backRoute="/main" />
+      <Header showIcon={true} backRoute="/" />
       <div className="fixed inset-0 flex items-center justify-center bg-gray-200 bg-opacity-50">
         <div className="max-w-6xl mx-auto p-8 bg-white border border-gray-300 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-primary">
