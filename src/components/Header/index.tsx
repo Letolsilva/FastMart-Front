@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { FiUser } from "react-icons/fi";
 import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import purpleIcon from '/purple-icon.png';
-import { fetchEmployees, PostLogout } from "../../services/APIservices";
+import purpleIcon from "/purple-icon.png";
+import { fetchEmployees, PostLogout } from "../../services/ServicesEmployees";
 import { Employee } from "../../pages/ListEmployees";
 import { useAuthUser } from "react-auth-kit";
 import { toast } from "react-toastify";
@@ -20,7 +20,9 @@ export const Header: React.FC<HeaderProps> = ({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [loggedInEmployee, setLoggedInEmployee] = useState<Employee | null>(null);
+  const [loggedInEmployee, setLoggedInEmployee] = useState<Employee | null>(
+    null
+  );
   const navigate = useNavigate();
   const authUser = useAuthUser();
 
@@ -29,9 +31,9 @@ export const Header: React.FC<HeaderProps> = ({
       try {
         const user = authUser();
         const userEmail = user?.email;
-        if(userEmail){
+        if (userEmail) {
           const employees = await fetchEmployees();
-          const loggedUser = employees.find(emp => emp.email === userEmail);
+          const loggedUser = employees.find((emp) => emp.email === userEmail);
           setLoggedInEmployee(loggedUser || null);
         }
       } catch (error) {
@@ -44,9 +46,9 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleLogout = async () => {
     const userEmail = authUser()?.email;
-    toast.success(`Usuário com email ${userEmail} deslogado.`)
+    toast.success(`Usuário com email ${userEmail} deslogado.`);
     setRedirect(true);
-    if(loggedInEmployee){
+    if (loggedInEmployee) {
       console.log(loggedInEmployee.id);
       await PostLogout(loggedInEmployee.id, navigate);
     }

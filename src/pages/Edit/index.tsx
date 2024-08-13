@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import {
   fetchJustOneEmployee,
   updateEmployeeData,
-} from "../../services/APIservices";
+} from "../../services/ServicesEmployees";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
 import { CPFInput } from "../../components/CPFInput";

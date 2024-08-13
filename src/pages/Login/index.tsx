@@ -33,7 +33,7 @@ export const Login: React.FC = () => {
           authState: { email: data.email },
         });
 
-        navigate("/");
+        navigate("/main");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

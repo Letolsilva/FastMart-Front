@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
 import { CPFInput } from "../../components/CPFInput";
-import { CreateUser } from "../../services/APIservices";
+import { CreateUser } from "../../services/ServicesEmployees";
 import { Header } from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 
@@ -46,7 +46,7 @@ export const Register: React.FC = () => {
       try {
         await CreateUser(values);
         formik.resetForm();
-        navigate("/");
+        navigate("/main");
       } catch (error) {
         console.error("Erro ao cadastrar:", error);
       }
@@ -55,7 +55,7 @@ export const Register: React.FC = () => {
 
   return (
     <div>
-      <Header showIcon={true} backRoute="/" />
+      <Header showIcon={true} backRoute="/main" />
       <div className="fixed inset-0 flex items-center justify-center bg-gray-200 bg-opacity-50">
         <div className="max-w-6xl mx-auto p-8 bg-white border border-gray-300 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-primary">

@@ -3,7 +3,10 @@ import "tailwindcss/tailwind.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Header } from "../../components/Header";
 import { Link } from "react-router-dom";
-import { deleteFunction, fetchEmployees } from "../../services/APIservices";
+import {
+  deleteFunction,
+  fetchEmployees,
+} from "../../services/ServicesEmployees";
 import SearchBar from "../../components/SearchBar";
 import { useNavigate } from "react-router-dom";
 
@@ -68,7 +71,7 @@ const EmployeesList: React.FC = () => {
 
   return (
     <div className="p-4">
-      <Header showIcon={true} backRoute="/" />
+      <Header showIcon={true} backRoute="/main" />
       <div className="border border-gray-300 p-10 rounded-lg shadow-md mt-5">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-purple-800">

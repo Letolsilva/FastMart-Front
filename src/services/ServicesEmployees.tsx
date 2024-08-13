@@ -4,6 +4,71 @@ import { Employee } from "../pages/ListEmployees";
 const API_URL = "http://localhost:3333";
 import { useNavigate } from "react-router-dom";
 
+//Login
+export async function PostLogin(
+  data: any,
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    const response = await axios.post(`${API_URL}/users/login`, data);
+    if (response.status === 200) {
+      const { token } = response.data;
+      localStorage.setItem("authToken", token);
+      toast.success("Usuário logado com sucesso!");
+      navigate("/main");
+    }
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          toast.error("E-mail ou senha incorretos!");
+        } else if (error.response.status === 403) {
+          toast.error("Usuário já logado!");
+        }
+      } else {
+        toast.error("Erro ao buscar dados da API");
+      }
+    }
+    throw error;
+  }
+}
+
+export async function PostLogout(
+  id: any,
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    console.log(id);
+    const token = localStorage.getItem("authToken");
+    const response = await axios.post(
+      `${API_URL}/users/logout/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      toast.success("Usuário deslogado com sucesso!");
+      navigate("/login");
+    }
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 500) {
+          toast.error("Erro ao deslogar!");
+        }
+      }
+    }
+
+    throw error;
+  }
+}
+
+// Funcionarios
 export async function fetchEmployees(): Promise<Employee[]> {
   try {
     const response: AxiosResponse<{ users: Employee[] }> = await axios.get(
@@ -91,69 +156,6 @@ export async function CreateUser(data: any) {
   }
 }
 
-export async function PostLogin(
-  data: any,
-  navigate: ReturnType<typeof useNavigate>
-) {
-  try {
-    const response = await axios.post(`${API_URL}/users/login`, data);
-    if (response.status === 200) {
-      const { token } = response.data;
-      localStorage.setItem("authToken", token);
-      toast.success("Usuário logado com sucesso!");
-      navigate("/");
-    }
-    return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        if (error.response.status === 400) {
-          toast.error("E-mail ou senha incorretos!");
-        } else if (error.response.status === 403) {
-          toast.error("Usuário já logado!");
-        }
-      } else {
-        toast.error("Erro ao buscar dados da API");
-      }
-    }
-    throw error;
-  }
-}
-
-export async function PostLogout(
-  id: any,
-  navigate: ReturnType<typeof useNavigate>
-) {
-  try {
-    console.log(id);
-    const token = localStorage.getItem("authToken");
-    const response = await axios.post(
-      `${API_URL}/users/logout/${id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (response.status === 200) {
-      toast.success("Usuário deslogado com sucesso!");
-      navigate("/login");
-    }
-    return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        if (error.response.status === 500) {
-          toast.error("Erro ao deslogar!");
-        }
-      }
-    }
-
-    throw error;
-  }
-}
-
 export async function deleteFunction(
   id: any,
   navigate: ReturnType<typeof useNavigate>
@@ -167,7 +169,7 @@ export async function deleteFunction(
     });
     if (response.status === 200) {
       toast.success("Usuário deletado com sucesso!");
-      navigate("/");
+      navigate("/main");
     }
     return response.data;
   } catch (error: unknown) {
@@ -182,29 +184,6 @@ export async function deleteFunction(
       navigate("/lista-funcionarios");
     }
 
-    throw error;
-  }
-}
-
-export async function registerProduct(data: any) {
-  try {
-    const response = await axios.post(`${API_URL}/products`, data);
-    if (response.status === 200) {
-      toast.success("Produto cadastrado com sucesso!");
-    }
-    return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        if (error.response.status === 400) {
-          toast.error(error.message);
-        } else if (error.response.status === 500) {
-          toast.error(error.message);
-        }
-      } else {
-        toast.error("Erro ao buscar dados da API");
-      }
-    }
     throw error;
   }
 }

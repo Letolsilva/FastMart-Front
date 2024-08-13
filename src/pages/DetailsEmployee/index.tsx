@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
-import { fetchEmployees } from "../../services/APIservices";
+import { fetchEmployees } from "../../services/ServicesEmployees";
 import { Employee } from "../ListEmployees";
 
 const EmployeeDetails: React.FC = () => {
