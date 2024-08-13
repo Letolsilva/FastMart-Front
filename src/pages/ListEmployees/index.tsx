@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { deleteFunction, fetchEmployees } from "../../services/APIservices";
 import SearchBar from "../../components/SearchBar";
 import { useNavigate } from "react-router-dom";
-//import { toast } from "react-toastify";
 
 export interface Employee {
   id: number;
@@ -33,7 +32,10 @@ const EmployeesList: React.FC = () => {
     const loadEmployees = async () => {
       try {
         const data = await fetchEmployees();
-        setEmployees(data);
+        const sortedEmployees = data.sort((a: Employee, b: Employee) =>
+          a.name.localeCompare(b.name)
+        );
+        setEmployees(sortedEmployees);
       } catch (error) {
         setError("Erro ao buscar dados da API");
       } finally {
@@ -79,38 +81,44 @@ const EmployeesList: React.FC = () => {
           />
         </div>
         <ul className="space-y-2">
-          {filteredEmployees.map((employee) => (
-            <Link
-              key={employee.id}
-              to={`/dados-funcionario/${employee.id}`}
-              className="block"
-            >
-              <li className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                {employee.name}
-                <div className="flex space-x-5">
-                  <Link
-                    to={`/edit/${employee.id}`}
-                    className="text-neutral-500 hover:text-purple-800"
-                  >
-                    <i className="fas fa-edit"></i>
-                  </Link>
-                  <button
-                    className="text-neutral-500 hover:text-purple-800"
-                    onClick={() => {
-                      const confirmed = window.confirm(
-                        `Você quer mesmo deletar ${employee.name}?`
-                      );
-                      if (confirmed) {
-                        handleDelete(employee.id);
-                      }
-                    }}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </button>
-                </div>
-              </li>
-            </Link>
-          ))}
+          {filteredEmployees.length > 0 ? (
+            filteredEmployees.map((employee) => (
+              <Link
+                key={employee.id}
+                to={`/dados-funcionario/${employee.id}`}
+                className="block"
+              >
+                <li className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                  {employee.name}
+                  <div className="flex space-x-5">
+                    <Link
+                      to={`/edit/${employee.id}`}
+                      className="text-neutral-500 hover:text-purple-800"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </Link>
+                    <button
+                      className="text-neutral-500 hover:text-purple-800"
+                      onClick={() => {
+                        const confirmed = window.confirm(
+                          `Você quer mesmo deletar ${employee.name}?`
+                        );
+                        if (confirmed) {
+                          handleDelete(employee.id);
+                        }
+                      }}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </li>
+              </Link>
+            ))
+          ) : (
+            <p className="text-center text-purple-800">
+              Funcionário não encontrado
+            </p>
+          )}
         </ul>
       </div>
     </div>
