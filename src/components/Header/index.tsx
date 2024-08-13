@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import purpleIcon from '/purple-icon.png';
 import { fetchEmployees, PostLogout } from "../../services/APIservices";
 import { Employee } from "../../pages/ListEmployees";
+import { useAuthUser } from "react-auth-kit";
+import { toast } from "react-toastify";
 
 interface HeaderProps {
   showIcon?: boolean;
@@ -20,13 +22,18 @@ export const Header: React.FC<HeaderProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [loggedInEmployee, setLoggedInEmployee] = useState<Employee | null>(null);
   const navigate = useNavigate();
+  const authUser = useAuthUser();
 
   useEffect(() => {
     const fetchLoggedInUser = async () => {
       try {
-        const employees = await fetchEmployees();
-        const loggedUser = employees.find(emp => emp.is_logged);
-        setLoggedInEmployee(loggedUser || null);
+        const user = authUser();
+        const userEmail = user?.email;
+        if(userEmail){
+          const employees = await fetchEmployees();
+          const loggedUser = employees.find(emp => emp.email === userEmail);
+          setLoggedInEmployee(loggedUser || null);
+        }
       } catch (error) {
         console.error("Failed to fetch employees:", error);
       }
@@ -36,6 +43,8 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   const handleLogout = async () => {
+    const userEmail = authUser()?.email;
+    toast.success(`Usuário com email ${userEmail} deslogado.`)
     setRedirect(true);
     if(loggedInEmployee){
       console.log(loggedInEmployee.id);
