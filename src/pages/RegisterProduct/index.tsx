@@ -9,8 +9,6 @@ import { registerProduct } from "../../services/APIservices";
 import { Header } from "../../components/Header";
 import { CashInput } from "../../components/CashInput";
 
-// preciso olhar como estar indo agora ... a questao do sifrão melhor tirar o quanto antes...
-
 export const ValidationProdcutSchema = yup.object().shape({
     name: yup.string().required("Nome é obrigatório"),
     unit_of_measure: yup.string().required("Unidade de Medida é obrigatório"),
@@ -40,10 +38,8 @@ export const RegisterProduct: React.FC = () => {
             const date = new Date(values.expiry_date);
             const formattedDate = date.toISOString().split('T')[0];
             values.expiry_date = formattedDate;
-
             // Exiba a data formatada
             console.log("Data formatada:", values.expiry_date);
-
             // Enviar os dados para o serviço
             await registerProduct(values);
         },
@@ -98,7 +94,7 @@ export const RegisterProduct: React.FC = () => {
                         {formik.errors.unit_of_measure}
                     </p> )}
 
-                    <CashInput
+                    <CashInput // preciso olhar como estar indo agora ... a questao do sifrão melhor tirar o quanto antes...
                         title="Preço de compra*"
                         placeholder="Digite o preço da compra"
                         value={formik.values.purchase_price}
