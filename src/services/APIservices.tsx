@@ -67,7 +67,7 @@ export async function updateEmployeeData(data: Employee) {
   }
 }
 
-export async function PostFunction(data: any) {
+export async function CreateUser(data: any) {
   try {
     const response = await axios.post(`${API_URL}/users`, data);
     if (response.status === 200) {
@@ -77,8 +77,8 @@ export async function PostFunction(data: any) {
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        if (error.response.status === 400) {
-          toast.error("Erro ao realizar cadastrado");
+        if (error.response.status === 400 || error.response.status === 406) {
+          toast.error("Email ou CPF já cadastrado");
         } else if (error.response.status === 500) {
           toast.error("Erro ao cadastrar usuário");
         }
@@ -95,7 +95,6 @@ export async function PostLogin(
   data: any,
   navigate: ReturnType<typeof useNavigate>
 ) {
-
   try {
     const response = await axios.post(`${API_URL}/users/login`, data);
     if (response.status === 200) {
@@ -187,8 +186,8 @@ export async function deleteFunction(
   }
 }
 
-export async function registerProduct(data: any){
-  try{
+export async function registerProduct(data: any) {
+  try {
     const response = await axios.post(`${API_URL}/products`, data);
     if (response.status === 200) {
       toast.success("Produto cadastrado com sucesso!");
@@ -199,7 +198,6 @@ export async function registerProduct(data: any){
       if (error.response) {
         if (error.response.status === 400) {
         } else if (error.response.status === 500) {
-          
         }
       } else {
         toast.error("Erro ao buscar dados da API");

@@ -4,8 +4,9 @@ import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
 import { CPFInput } from "../../components/CPFInput";
-import { PostFunction } from "../../services/APIservices";
+import { CreateUser } from "../../services/APIservices";
 import { Header } from "../../components/Header";
+import { useNavigate } from "react-router-dom";
 
 export const ValidationUserSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),
@@ -28,6 +29,7 @@ export const ValidationUserSchema = yup.object().shape({
 });
 
 export const Register: React.FC = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -41,7 +43,13 @@ export const Register: React.FC = () => {
     },
     validationSchema: ValidationUserSchema,
     onSubmit: async (values) => {
-      await PostFunction(values);
+      try {
+        await CreateUser(values);
+        formik.resetForm();
+        navigate("/");
+      } catch (error) {
+        console.error("Erro ao cadastrar:", error);
+      }
     },
   });
 
