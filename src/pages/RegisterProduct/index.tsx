@@ -6,38 +6,48 @@ import { DateInput } from "../../components/DateInput";
 import { NumberInput } from "../../components/NumberInput";
 import { SelectInput } from "../../components/SelectInput";
 import { registerProduct } from "../../services/APIservices";
-import { CashInput } from "../../components/CashInput";
 import { Header } from "../../components/Header";
+import { CashInput } from "../../components/CashInput";
 
-export const ValidationUserSchema = yup.object().shape({
+// preciso olhar como estar indo agora ... a questao do sifrão melhor tirar o quanto antes...
+
+export const ValidationProdcutSchema = yup.object().shape({
     name: yup.string().required("Nome é obrigatório"),
     unit_of_measure: yup.string().required("Unidade de Medida é obrigatório"),
     purchase_price: yup.string().required("Preço da compra é obrigatório"),
     quantity_per_unit: yup.string().required("Quantidade é obrigatório"),
     sale_price: yup.string().required("Preço é obrigatório"),
-    expiry_date: yup.string().required("Data de validade é obrigatório"),
+    expiry_date: yup.date().required("Data de validade é obrigatório"),
     supplier: yup.string().required("Fornecedor é obrigatório"),
     code: yup.string().required("Codigo é obrigatório"),
-  });
-  
-  export const RegisterProduct: React.FC = () => {
+});
+
+export const RegisterProduct: React.FC = () => {
     const formik = useFormik({
-      initialValues: {
-        name: "",
-        unit_of_measure: "",
-        purchase_price: "",
-        quantity_per_unit: "",
-        sale_price: "",
-        expiry_date: "",
-        supplier: "",
-        code: "",
-      },
-      validationSchema: ValidationUserSchema,
-      onSubmit: async (values) => {
-        await registerProduct(values);
-      },
+        initialValues: {
+            name: "",
+            unit_of_measure: "",
+            purchase_price: "",
+            quantity_per_unit: "",
+            sale_price: "",
+            expiry_date: "",
+            supplier: "",
+            code: "",
+        },
+        validationSchema: ValidationProdcutSchema,
+        onSubmit: async (values) => {
+            // Formate a data para yyyy-MM-dd
+            const date = new Date(values.expiry_date);
+            const formattedDate = date.toISOString().split('T')[0];
+            values.expiry_date = formattedDate;
+
+            // Exiba a data formatada
+            console.log("Data formatada:", values.expiry_date);
+
+            // Enviar os dados para o serviço
+            await registerProduct(values);
+        },
     });
-  
     return (
       <div>
         <Header showIcon={true} backRoute="/" />
@@ -81,32 +91,30 @@ export const ValidationUserSchema = yup.object().shape({
                             ? "border-red-500"
                             : ""
                         }
-                        options={["kg", "l", "ml", "cm", "m", "g", "nenhum"]}
+                        options={["kg", "g", "l", "ml", "nenhum(a)"]}
                     />
                     {formik.errors.unit_of_measure && formik.touched.unit_of_measure && (
                     <p className="text-red-500 text-xs -mt-3 mb-3">
                         {formik.errors.unit_of_measure}
                     </p> )}
 
-                    <TextInput
+                    <CashInput
                         title="Preço de compra*"
                         placeholder="Digite o preço da compra"
                         value={formik.values.purchase_price}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
                         name="purchase_price"
+                        onValueChange={(value) => formik.setFieldValue("purchase_price", value)} // Corrigido para atualizar o Formik
                         className={
-                        formik.errors.purchase_price && formik.touched.purchase_price
+                            formik.errors.purchase_price && formik.touched.purchase_price
                             ? "border-red-500"
                             : ""
                         }
-                        
                     />
                     {formik.errors.purchase_price && formik.touched.purchase_price && (
                     <p className="text-red-500 text-xs -mt-3 mb-3">
                         {formik.errors.purchase_price}
                     </p>)}
-
+                    
                     <NumberInput
                         title="Quantidade por unidade*"
                         placeholder="Digite a quantidade por unidade"
@@ -150,20 +158,20 @@ export const ValidationUserSchema = yup.object().shape({
                     <DateInput
                         title="Data de validade*"
                         placeholder="Digite a data de validade"
-                        value={formik.values.expiry_date}
+                        value={formik.values.expiry_date} // Assegure-se de que o valor aqui é yyyy-MM-dd
                         onChange={formik.handleChange}
                         name="expiry_date"
                         className={
-                        formik.errors.expiry_date && formik.touched.expiry_date
+                            formik.errors.expiry_date && formik.touched.expiry_date
                             ? "border-red-500"
                             : ""
                         }
-                        
                     />
                     {formik.errors.expiry_date && formik.touched.expiry_date && (
-                    <p className="text-red-500 text-xs -mt-3 mb-3">
-                        {formik.errors.expiry_date}
-                    </p>)}
+                        <p className="text-red-500 text-xs -mt-3 mb-3">
+                            {formik.errors.expiry_date}
+                        </p>
+                    )}
 
                     <TextInput
                         title="Fornecedor*"

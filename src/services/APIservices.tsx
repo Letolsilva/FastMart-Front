@@ -197,8 +197,9 @@ export async function registerProduct(data: any){
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 400) {
+          toast.error(error.message);
         } else if (error.response.status === 500) {
-          
+          toast.error(error.message);
         }
       } else {
         toast.error("Erro ao buscar dados da API");
