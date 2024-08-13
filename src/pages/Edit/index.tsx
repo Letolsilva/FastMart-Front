@@ -1,9 +1,7 @@
 import { Header } from "../../components/Header";
 import { useParams } from "react-router-dom";
-import {
-  fetchJustOneEmployee,
-  updateEmployeeData,
-} from "../../services/ServicesEmployees";
+
+import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
 import { CPFInput } from "../../components/CPFInput";
@@ -11,7 +9,29 @@ import { useEffect, useState } from "react";
 import { Employee } from "../ListEmployees";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
-import { ValidationUserSchema } from "../RegisterEmployees";
+import {
+  fetchJustOneEmployee,
+  updateEmployeeData,
+} from "../../services/ServicesEmployees";
+
+export const ValidationUserEditSchema = yup.object().shape({
+  name: yup.string().required("Nome é obrigatório"),
+  email: yup.string().email("Email inválido").required("Email é obrigatório"),
+  code: yup.string().required("Código é obrigatório"),
+  birthday_date: yup.string().required("Data de nascimento é obrigatória"),
+  phone: yup
+    .string()
+    .matches(/^[0-9]{10,11}$/, "Telefone deve ter 10 ou 11 dígitos")
+    .required("Telefone é obrigatório"),
+  education: yup.string().required("Educação é obrigatória"),
+  cpf: yup
+    .string()
+    .matches(
+      /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+      "CPF deve estar no formato xxx.xxx.xxx-xx"
+    )
+    .required("CPF é obrigatório"),
+});
 
 const EditPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,7 +54,7 @@ const EditPage: React.FC = () => {
       createdAt: "",
       updatedAt: "",
     },
-    validationSchema: ValidationUserSchema,
+    validationSchema: ValidationUserEditSchema,
     onSubmit: async (values: Employee) => {
       try {
         await updateEmployeeData(values);
