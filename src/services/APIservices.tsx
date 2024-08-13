@@ -185,3 +185,25 @@ export async function deleteFunction(
     throw error;
   }
 }
+
+export async function registerProduct(data: any){
+  try{
+    const response = await axios.post(`${API_URL}/products`, data);
+    if (response.status === 200) {
+      toast.success("Produto cadastrado com sucesso!");
+    }
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 400) {
+        } else if (error.response.status === 500) {
+          
+        }
+      } else {
+        toast.error("Erro ao buscar dados da API");
+      }
+    }
+    throw error;
+  }
+}
