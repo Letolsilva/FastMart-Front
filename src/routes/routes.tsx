@@ -12,7 +12,6 @@ export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-
       <Route path="/main" element={<MainPage />} />
       <Route path="/register" element={<Register />} />
       <Route path="/registrar-produto" element={<RegisterProduct />} />

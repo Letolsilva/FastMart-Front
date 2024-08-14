@@ -5,7 +5,6 @@ import { TextInput } from "../../../components/TextInput";
 import { DateInput } from "../../../components/DateInput";
 import { NumberInput } from "../../../components/NumberInput";
 import { SelectInput } from "../../../components/SelectInput";
-
 import { Header } from "../../../components/Header";
 import { CashInput } from "../../../components/CashInput";
 import { registerProduct } from "../../../services/ServicesProduct";
@@ -39,8 +38,9 @@ export const RegisterProduct: React.FC = () => {
       const date = new Date(values.expiry_date);
       const formattedDate = date.toISOString().split("T")[0];
       values.expiry_date = formattedDate;
-      // Exiba a data formatada
-      console.log("Data formatada:", values.expiry_date);
+      //Formata os valores
+      values.sale_price = values.sale_price.replace(/,/g, '.');
+      values.purchase_price = values.purchase_price.replace(/,/g, '.');
       // Enviar os dados para o serviço
       await registerProduct(values);
     },
@@ -48,7 +48,7 @@ export const RegisterProduct: React.FC = () => {
   return (
     <div>
       <Header showIcon={true} backRoute="/main" />
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-200 bg-opacity-50">
+      <div className="inset-0 flex items-center justify-center bg-gray-200 bg-opacity-50">
         <div className="mt-5 max-w-6xl mx-auto p-8 bg-white border border-gray-300 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-primary">
             Cadastrar Produto
@@ -81,7 +81,8 @@ export const RegisterProduct: React.FC = () => {
                 title="Unidade de Medida*"
                 value={formik.values.unit_of_measure}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                onBlur={formik.handleBlur} 
+                placeholder="selecionar a unidade"
                 name="unit_of_measure"
                 className={
                   formik.errors.unit_of_measure &&
@@ -142,13 +143,14 @@ export const RegisterProduct: React.FC = () => {
             </div>
 
             <div>
-              <TextInput
+              <CashInput
                 title="Preço de Venda*"
                 placeholder="Digite o preço de venda"
                 value={formik.values.sale_price}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
                 name="sale_price"
+                onValueChange={(value) =>
+                  formik.setFieldValue("sale_price", value)
+                } 
                 className={
                   formik.errors.sale_price && formik.touched.sale_price
                     ? "border-red-500"
