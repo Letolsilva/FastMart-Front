@@ -7,6 +7,7 @@ import EmployeeDetails from "../pages/DetailsEmployee";
 import EditPage from "../pages/Edit";
 import { RegisterProduct } from "../pages/Products/RegisterProduct";
 import ProductsList from "../pages/Products/ListProducts";
+import ProductDetails from "../pages/Products/DetailsProducts";
 
 export const AppRouter = () => {
   return (
@@ -20,6 +21,7 @@ export const AppRouter = () => {
       <Route path="/edit/:id" element={<EditPage />} />
 
       <Route path="/product/list" element={<ProductsList />} />
+      <Route path="/dados-products/:id" element={<ProductDetails />} />
     </Routes>
   );
 };

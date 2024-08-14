@@ -5,6 +5,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { fetchProducts } from "../../../services/ServicesProduct";
 import { Header } from "../../../components/Header";
 import SearchBar from "../../../components/SearchBar";
+import { useNavigate } from "react-router-dom";
 
 export interface TypeProduct {
   id: number;
@@ -23,6 +24,7 @@ const ProductsList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -63,6 +65,10 @@ const ProductsList: React.FC = () => {
     );
   }
 
+  const handleProductClick = (id: number) => {
+    navigate(`/dados-products/${id}`);
+  };
+
   return (
     <div className="p-4">
       <Header showIcon={true} backRoute="/main" />
@@ -82,7 +88,8 @@ const ProductsList: React.FC = () => {
             {filteredProducts.map((product) => (
               <li
                 key={product.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                onClick={() => handleProductClick(product.id)}
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
               >
                 <span>{product.name}</span>
                 <div className="flex space-x-5">
