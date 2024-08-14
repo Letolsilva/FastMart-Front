@@ -10,6 +10,7 @@ export async function registerProduct(data: any) {
     if (response.status === 200) {
       toast.success("Produto cadastrado com sucesso!");
     }
+
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -35,19 +36,17 @@ export async function fetchProducts(): Promise<TypeProduct[]> {
       throw new Error("Token de autenticação não encontrado");
     }
 
-    const response: AxiosResponse<TypeProduct[]> = await axios.get(
-      `${API_URL}/products`,
-      {
+    const response: AxiosResponse<{ products: TypeProduct[] }> =
+      await axios.get(`${API_URL}/products`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
+      });
 
-    if (Array.isArray(response.data)) {
-      return response.data;
+    if (Array.isArray(response.data.products)) {
+      return response.data.products;
     } else {
-      throw new Error("A resposta da API não é um array");
+      throw new Error("A resposta da API não contém um array de produtos");
     }
   } catch (error) {
     console.error("Erro ao buscar dados da API:", error);

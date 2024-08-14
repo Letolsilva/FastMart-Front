@@ -48,11 +48,19 @@ const ProductsList: React.FC = () => {
   );
 
   if (loading) {
-    return <p>Carregando...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Carregando...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>{error}</p>
+      </div>
+    );
   }
 
   return (
@@ -69,26 +77,28 @@ const ProductsList: React.FC = () => {
             placeholder="Pesquisar Produto"
           />
         </div>
-        <ul className="space-y-2">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
+        {filteredProducts.length > 0 ? (
+          <ul className="space-y-2">
+            {filteredProducts.map((product) => (
               <li
                 key={product.id}
                 className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200"
               >
-                {product.name}
+                <span>{product.name}</span>
                 <div className="flex space-x-5">
-                  <i className="fas fa-edit"></i>
+                  <button className="text-neutral-500 hover:text-purple-800">
+                    <i className="fas fa-edit"></i>
+                  </button>
                   <button className="text-neutral-500 hover:text-purple-800">
                     <i className="fas fa-trash"></i>
                   </button>
                 </div>
               </li>
-            ))
-          ) : (
-            <p>Nenhum produto encontrado</p>
-          )}
-        </ul>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center text-gray-500">Nenhum produto encontrado</p>
+        )}
       </div>
     </div>
   );
