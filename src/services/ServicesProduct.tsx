@@ -147,7 +147,8 @@ export async function recordSale(data: any, navigate: ReturnType<typeof useNavig
           toast.error("Erro interno!");
         }
         else if(error.response.status === 400){
-          toast.error("Produtos inválidos");
+          const errorMessage = error.response.data.message || "Erro na solicitação!";
+          toast.error(errorMessage);
         }
       }
     }
