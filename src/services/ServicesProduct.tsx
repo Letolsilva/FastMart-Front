@@ -16,7 +16,6 @@ export async function registerProduct(data: any) {
     if (response.status === 200) {
       toast.success("Produto cadastrado com sucesso!");
     }
-    
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
