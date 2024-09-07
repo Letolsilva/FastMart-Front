@@ -25,7 +25,7 @@ const MainPage: React.FC = () => {
             nome={"Listar Produtos"}
             local="/product/list"
           ></MenuMain>
-          <MenuMain nome={"Registro Financeiro"} local="/"></MenuMain>
+          <MenuMain nome={"Registrar venda"} local="./sales"></MenuMain>
           <MenuMain nome={"Análise de Dados"} local="/"></MenuMain>
         </ul>
       </main>
