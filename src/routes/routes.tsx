@@ -9,11 +9,13 @@ import { RegisterProduct } from "../pages/Products/RegisterProduct";
 import ProductsList from "../pages/Products/ListProducts";
 import ProductDetails from "../pages/Products/DetailsProducts";
 import EditCompanyPage from "../pages/Company/Edit";
+import { Sales } from "../pages/Sales";
 
 export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/sales" element={<Sales />} />
       <Route path="/main" element={<MainPage />} />
       <Route path="/register" element={<Register />} />
       <Route path="/registrar-produto" element={<RegisterProduct />} />

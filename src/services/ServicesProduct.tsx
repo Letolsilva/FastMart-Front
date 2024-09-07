@@ -90,14 +90,13 @@ export async function fetchProducts(): Promise<TypeProduct[]> {
 
 export async function deleteProduct(
   code: any,
-  navigate: ReturnType<typeof useNavigate>
-) {
-  try {
-    const token = localStorage.getItem("authToken");
-    const company_id = localStorage.getItem("company_id");
-    const response = await axios.delete(
-      `${API_URL}/products/${code}/${company_id}`,
-      {
+
+  navigate: ReturnType<typeof useNavigate>){
+    try {
+      const token = localStorage.getItem("authToken");
+      const company_id = localStorage.getItem("company_id");
+      const response = await axios.delete(`${API_URL}/products/${code}/${company_id}`,{
+
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,10 +118,44 @@ export async function deleteProduct(
       }
       navigate("/product/list");
     }
+    
+    throw error;
+  }
+}
+
+
+export async function recordSale(data: any, navigate: ReturnType<typeof useNavigate>){
+  try{
+    const token = localStorage.getItem("authToken");
+    const company_id = localStorage.getItem("company_id");
+    const response = await axios.post(`${API_URL}/finances/sales/${company_id}`, data,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if(response.status === 201){
+      toast.success("Venda realizada com sucesso!");
+      navigate("/main");
+    }
+    return response.data;
+  } catch(error: unknown){
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 404) {
+          toast.error("Produto não encontrado!");
+        } else if (error.response.status === 500) {
+          toast.error("Erro interno!");
+        }
+        else if(error.response.status === 400){
+          toast.error("Produtos inválidos");
+        }
+      }
+    }
 
     throw error;
   }
 }
+
 
 // Função para buscar produtos que estão prestes a vencer
 export const getExpiringProducts = async (days: number) => {
@@ -138,3 +171,4 @@ export const getExpiringProducts = async (days: number) => {
     throw error;
   }
 };
+
