@@ -10,20 +10,19 @@ import {
 } from "../../../services/ServiceCompany";
 
 const ValidationCompanySchema = yup.object().shape({
-  company: yup.object().shape({
-    comp_name: yup.string().required("Nome da empresa é obrigatório"),
-    comp_cnpj: yup
-      .string()
-      .matches(
-        /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/,
-        "CNPJ deve estar no formato xx.xxx.xxx/xxxx-xx"
-      )
-      .required("CNPJ é obrigatório"),
-    comp_employees: yup
-      .number()
-      .typeError("Número de funcionários deve ser um número")
-      .required("Número de funcionários é obrigatório"),
-  }),
+  comp_name: yup.string().required("Nome da empresa é obrigatório"),
+  comp_cnpj: yup
+    .string()
+    .matches(
+      /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/,
+      "CNPJ deve estar no formato xx.xxx.xxx/xxxx-xx"
+    )
+    .required("CNPJ é obrigatório"),
+  comp_employees: yup
+    .number()
+    .typeError("Número de funcionários deve ser um número")
+    .required("Número de funcionários é obrigatório"),
+
   address: yup.object().shape({
     street: yup.string().required("Rua é obrigatória"),
     number: yup
@@ -33,8 +32,6 @@ const ValidationCompanySchema = yup.object().shape({
     district: yup.string().required("Bairro é obrigatório"),
     city: yup.string().required("Cidade é obrigatória"),
     state: yup.string().required("Estado é obrigatório"),
-    createdAt: yup.date().required("Data de criação é obrigatória"),
-    updatedAt: yup.date().required("Data de atualização é obrigatória"),
   }),
 });
 
@@ -44,31 +41,22 @@ const EditCompanyPage: React.FC = () => {
 
   const formik = useFormik({
     initialValues: {
-      company: {
-        id: -1,
-        comp_name: "",
-        comp_cnpj: "",
-        comp_employees: 0,
-        createdAt: "",
-        updatedAt: "",
-      },
-      companyAddress: {
-        id: -1,
+      comp_name: "",
+      comp_cnpj: "",
+      comp_employees: 0,
+
+      address: {
         street: "",
         number: -1,
         district: "",
         city: "",
         state: "",
-        createdAt: "",
-        updatedAt: "",
-        company_id: 1,
       },
     },
     validationSchema: ValidationCompanySchema,
 
     onSubmit: async (values) => {
       try {
-        console.log("aaaa");
         await updateCompanyData(values);
         toast.success("Empresa atualizada com sucesso!");
       } catch (error) {
@@ -84,27 +72,19 @@ const EditCompanyPage: React.FC = () => {
 
         if (response.status === 1) {
           const fetchedCompany = response.company;
-          const fetchedCompanyAddress = response.companyAddress;
+          const fetchedaddress = response.address;
 
           formik.setValues({
-            company: {
-              id: fetchedCompany.id,
-              comp_name: fetchedCompany.comp_name,
-              comp_cnpj: fetchedCompany.comp_cnpj,
-              comp_employees: fetchedCompany.comp_employees,
-              createdAt: fetchedCompany.createdAt,
-              updatedAt: fetchedCompany.updatedAt,
-            },
-            companyAddress: {
-              id: fetchedCompanyAddress.id,
-              street: fetchedCompanyAddress.street,
-              number: fetchedCompanyAddress.number,
-              district: fetchedCompanyAddress.district,
-              city: fetchedCompanyAddress.city,
-              state: fetchedCompanyAddress.state,
-              createdAt: fetchedCompanyAddress.createdAt,
-              updatedAt: fetchedCompanyAddress.updatedAt,
-              company_id: fetchedCompanyAddress.company_id,
+            comp_name: fetchedCompany.comp_name,
+            comp_cnpj: fetchedCompany.comp_cnpj,
+            comp_employees: fetchedCompany.comp_employees,
+
+            address: {
+              street: fetchedaddress.street,
+              number: fetchedaddress.number,
+              district: fetchedaddress.district,
+              city: fetchedaddress.city,
+              state: fetchedaddress.state,
             },
           });
         } else {
@@ -140,74 +120,182 @@ const EditCompanyPage: React.FC = () => {
     <div className="relative min-h-screen bg-gray-100">
       <Header showIcon={true} backRoute="/main" />
       <div className="flex items-center justify-center p-4">
-        <div className="w-full max-w-lg bg-white border border-gray-300 rounded-lg shadow-lg p-6">
+        <div className="w-full max-w-2xl bg-white border border-gray-300 rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold mb-6 text-center text-primary">
             Editar Empresa
           </h2>
-          <form onSubmit={formik.handleSubmit} className="space-y-3">
-            <TextInput
-              title="Nome da Empresa*"
-              onChange={formik.handleChange}
-              value={formik.values.company.comp_name}
-              name="company.comp_name"
-              className={
-                formik.errors.company?.comp_name &&
-                formik.touched.company?.comp_name
-                  ? "border-red-500"
-                  : "text-gray-700"
-              }
-            />
-            {formik.errors.company?.comp_name &&
-              formik.touched.company?.comp_name && (
+          <form
+            onSubmit={formik.handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <div>
+              <TextInput
+                title="Nome da Empresa*"
+                onChange={formik.handleChange}
+                value={formik.values.comp_name}
+                name="comp_name"
+                className={
+                  formik.errors.comp_name && formik.touched.comp_name
+                    ? "border-red-500"
+                    : "text-gray-700"
+                }
+              />
+              {formik.errors.comp_name && formik.touched.comp_name && (
                 <p className="text-red-500 text-xs">
-                  {formik.errors.company?.comp_name}
+                  {formik.errors.comp_name}
                 </p>
               )}
+            </div>
 
-            <TextInput
-              title="CNPJ*"
-              onChange={formik.handleChange}
-              value={formik.values.company.comp_cnpj}
-              name="company.comp_cnpj"
-              className={
-                formik.errors.company?.comp_cnpj &&
-                formik.touched.company?.comp_cnpj
-                  ? "border-red-500"
-                  : ""
-              }
-            />
-            {formik.errors.company?.comp_cnpj &&
-              formik.touched.company?.comp_cnpj && (
+            <div>
+              <TextInput
+                title="CNPJ*"
+                onChange={formik.handleChange}
+                value={formik.values.comp_cnpj}
+                name="comp_cnpj"
+                className={
+                  formik.errors.comp_cnpj && formik.touched.comp_cnpj
+                    ? "border-red-500"
+                    : ""
+                }
+              />
+              {formik.errors.comp_cnpj && formik.touched.comp_cnpj && (
                 <p className="text-red-500 text-xs">
-                  {formik.errors.company?.comp_cnpj}
+                  {formik.errors.comp_cnpj}
                 </p>
               )}
+            </div>
 
-            <TextInput
-              title="Número de Funcionários*"
-              onChange={formik.handleChange}
-              value={formik.values.company.comp_employees}
-              name="company.comp_employees"
-              className={
-                formik.errors.company?.comp_employees &&
-                formik.touched.company?.comp_employees
-                  ? "border-red-500"
-                  : ""
-              }
-            />
-            {formik.errors.company?.comp_employees &&
-              formik.touched.company?.comp_employees && (
+            <div>
+              <TextInput
+                title="Número de Funcionários*"
+                onChange={formik.handleChange}
+                value={formik.values.comp_employees}
+                name="comp_employees"
+                className={
+                  formik.errors.comp_employees && formik.touched.comp_employees
+                    ? "border-red-500"
+                    : ""
+                }
+              />
+              {formik.errors.comp_employees &&
+                formik.touched.comp_employees && (
+                  <p className="text-red-500 text-xs">
+                    {formik.errors.comp_employees}
+                  </p>
+                )}
+            </div>
+
+            <div>
+              <TextInput
+                title="Rua*"
+                onChange={formik.handleChange}
+                value={formik.values.address.street}
+                name="address.street"
+                className={
+                  formik.errors.address?.street &&
+                  formik.touched.address?.street
+                    ? "border-red-500"
+                    : ""
+                }
+              />
+              {formik.errors.address?.street &&
+                formik.touched.address?.street && (
+                  <p className="text-red-500 text-xs">
+                    {formik.errors.address?.street}
+                  </p>
+                )}
+            </div>
+
+            <div>
+              <TextInput
+                title="Número*"
+                onChange={formik.handleChange}
+                value={formik.values.address.number}
+                name="address.number"
+                className={
+                  formik.errors.address?.number &&
+                  formik.touched.address?.number
+                    ? "border-red-500"
+                    : ""
+                }
+              />
+              {formik.errors.address?.number &&
+                formik.touched.address?.number && (
+                  <p className="text-red-500 text-xs">
+                    {formik.errors.address?.number}
+                  </p>
+                )}
+            </div>
+
+            <div>
+              <TextInput
+                title="Bairro*"
+                onChange={formik.handleChange}
+                value={formik.values.address.district}
+                name="address.district"
+                className={
+                  formik.errors.address?.district &&
+                  formik.touched.address?.district
+                    ? "border-red-500"
+                    : ""
+                }
+              />
+              {formik.errors.address?.district &&
+                formik.touched.address?.district && (
+                  <p className="text-red-500 text-xs">
+                    {formik.errors.address?.district}
+                  </p>
+                )}
+            </div>
+
+            <div>
+              <TextInput
+                title="Cidade*"
+                onChange={formik.handleChange}
+                value={formik.values.address.city}
+                name="address.city"
+                className={
+                  formik.errors.address?.city && formik.touched.address?.city
+                    ? "border-red-500"
+                    : ""
+                }
+              />
+              {formik.errors.address?.city && formik.touched.address?.city && (
                 <p className="text-red-500 text-xs">
-                  {formik.errors.company?.comp_employees}
+                  {formik.errors.address?.city}
                 </p>
               )}
+            </div>
 
-            <button
-              type="submit"
-              className="col-span-2 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary transition-colors"
-            >
-              Atualizar Empresa
-            </button>
+            <div>
+              <TextInput
+                title="Estado*"
+                onChange={formik.handleChange}
+                value={formik.values.address.state}
+                name="address.state"
+                className={
+                  formik.errors.address?.state && formik.touched.address?.state
+                    ? "border-red-500"
+                    : ""
+                }
+              />
+              {formik.errors.address?.state &&
+                formik.touched.address?.state && (
+                  <p className="text-red-500 text-xs">
+                    {formik.errors.address?.state}
+                  </p>
+                )}
+            </div>
+
+            <div className="col-span-2">
+              <button
+                type="submit"
+                className="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary transition-colors"
+              >
+                Atualizar Empresa
+              </button>
+            </div>
           </form>
         </div>
       </div>
