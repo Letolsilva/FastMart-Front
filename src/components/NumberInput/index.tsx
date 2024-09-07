@@ -3,7 +3,7 @@ import React from "react";
 interface TextInputProps {
   title: string;
   placeholder: string;
-  value?: string;
+  value?: string | number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;

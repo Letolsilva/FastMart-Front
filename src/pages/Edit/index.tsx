@@ -51,6 +51,7 @@ const EditPage: React.FC = () => {
       phone: "",
       education: "",
       is_logged: false,
+      company_id: -1,
       createdAt: "",
       updatedAt: "",
     },
@@ -85,6 +86,7 @@ const EditPage: React.FC = () => {
             cpf: fetchedEmployee.cpf,
             phone: fetchedEmployee.phone,
             education: fetchedEmployee.education,
+            company_id: fetchedEmployee.company_id,
             is_logged: fetchedEmployee.is_logged,
             createdAt: fetchedEmployee.createdAt,
             updatedAt: fetchedEmployee.updatedAt,
@@ -219,6 +221,7 @@ const EditPage: React.FC = () => {
                   {formik.errors.education}
                 </p>
               )}
+
               <p className="text-gray-700">
                 <strong className="p-1">Criado em: </strong>{" "}
                 {new Date(employee.createdAt).toLocaleDateString()}

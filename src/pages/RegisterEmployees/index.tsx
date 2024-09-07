@@ -40,6 +40,7 @@ export const Register: React.FC = () => {
       cpf: "",
       phone: "",
       education: "",
+      company_id: "",
     },
     validationSchema: ValidationUserSchema,
     onSubmit: async (values) => {
@@ -218,6 +219,26 @@ export const Register: React.FC = () => {
                 </p>
               )}
             </div>
+            <div className="col-span-2 -mt-6 flex justify-center">
+              <TextInput
+                title="ID da Empresa*"
+                placeholder="Digite o ID da empresa"
+                value={formik.values.company_id}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                name="company_id"
+                className={`w-full ${
+                  formik.errors.company_id && formik.touched.company_id
+                    ? "border-red-500"
+                    : ""
+                }`}
+              />
+            </div>
+            {formik.errors.company_id && formik.touched.company_id && (
+              <p className="col-span-2 text-red-500 text-xs -mt-3 mb-3 text-center">
+                {formik.errors.company_id}
+              </p>
+            )}
             <button
               type="submit"
               className="col-span-2 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary transition-colors"

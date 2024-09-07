@@ -6,42 +6,56 @@ import { DateInput } from "../../../components/DateInput";
 import { NumberInput } from "../../../components/NumberInput";
 import { SelectInput } from "../../../components/SelectInput";
 import { Header } from "../../../components/Header";
-import { CashInput } from "../../../components/CashInput";
 import { registerProduct } from "../../../services/ServicesProduct";
+import NumericInput from "../../../components/NumericInput";
 
 export const ValidationProdcutSchema = yup.object().shape({
-  name: yup.string().required("Nome é obrigatório"),
-  unit_of_measure: yup.string().required("Unidade de Medida é obrigatório"),
-  purchase_price: yup.string().required("Preço da compra é obrigatório"),
-  quantity_per_unit: yup.string().required("Quantidade é obrigatório"),
-  sale_price: yup.string().required("Preço é obrigatório"),
-  expiry_date: yup.date().required("Data de validade é obrigatório"),
-  supplier: yup.string().required("Fornecedor é obrigatório"),
-  code: yup.string().required("Codigo é obrigatório"),
+  product: yup.object().shape({
+    name: yup.string().required("Nome é obrigatório"),
+    unit_of_measure: yup.string().required("Unidade de Medida é obrigatória"),
+    purchase_price: yup
+      .number()
+      .typeError("Preço de compra deve ser um número")
+      .required("Preço de compra é obrigatório"),
+    sale_price: yup
+      .number()
+      .typeError("Preço de venda deve ser um número")
+      .required("Preço de venda é obrigatório"),
+    supplier: yup.string().required("Fornecedor é obrigatório"),
+    code: yup.string().required("Código é obrigatório"),
+  }),
+  expiry_date: yup.date().required("Data de validade é obrigatória"),
 });
 
 export const RegisterProduct: React.FC = () => {
   const formik = useFormik({
     initialValues: {
-      name: "",
-      unit_of_measure: "",
-      purchase_price: "",
-      quantity_per_unit: "",
-      sale_price: "",
+      date: "",
+      value: 1.0,
+      quantity: "",
       expiry_date: "",
-      supplier: "",
-      code: "",
+      payment_method: "",
+      product: {
+        name: "",
+        unit_of_measure: "",
+        purchase_price: "",
+        sale_price: "",
+        supplier: "",
+        code: "",
+      },
     },
     validationSchema: ValidationProdcutSchema,
     onSubmit: async (values) => {
-      // Formate a data para yyyy-MM-dd
       const date = new Date(values.expiry_date);
       const formattedDate = date.toISOString().split("T")[0];
       values.expiry_date = formattedDate;
-      //Formata os valores
-      values.sale_price = values.sale_price.replace(/,/g, '.');
-      values.purchase_price = values.purchase_price.replace(/,/g, '.');
-      // Enviar os dados para o serviço
+
+      values.product.sale_price = values.product.sale_price.replace(/,/g, ".");
+      values.product.purchase_price = values.product.purchase_price.replace(
+        /,/g,
+        "."
+      );
+
       await registerProduct(values);
     },
   });
@@ -61,112 +75,130 @@ export const RegisterProduct: React.FC = () => {
               <TextInput
                 title="Nome*"
                 placeholder="Digite seu nome"
-                value={formik.values.name}
+                value={formik.values.product.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                name="name"
+                name="product.name"
                 className={
-                  formik.errors.name && formik.touched.name
+                  formik.errors.product?.name && formik.touched.product?.name
                     ? "border-red-500"
                     : ""
                 }
               />
-              {formik.errors.name && formik.touched.name && (
+              {formik.errors.product?.name && formik.touched.product?.name && (
                 <p className="text-red-500 text-xs -mt-3 mb-3">
-                  {formik.errors.name}
+                  {formik.errors.product?.name}
+                </p>
+              )}
+
+              <DateInput
+                title="Data da compra*"
+                placeholder="Digite a data da compra"
+                value={formik.values.date}
+                onChange={formik.handleChange}
+                name="date"
+                className={
+                  formik.errors.date && formik.touched.date
+                    ? "border-red-500"
+                    : ""
+                }
+              />
+              {formik.errors.date && formik.touched.date && (
+                <p className="text-red-500 text-xs -mt-3 mb-3">
+                  {formik.errors.date}
                 </p>
               )}
 
               <SelectInput
                 title="Unidade de Medida*"
-                value={formik.values.unit_of_measure}
+                value={formik.values.product.unit_of_measure}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur} 
-                placeholder="selecionar a unidade"
-                name="unit_of_measure"
+                onBlur={formik.handleBlur}
+                placeholder="Selecionar a unidade"
+                name="product.unit_of_measure"
                 className={
-                  formik.errors.unit_of_measure &&
-                  formik.touched.unit_of_measure
+                  formik.errors.payment_method && formik.touched.payment_method
                     ? "border-red-500"
                     : ""
                 }
                 options={["kg", "g", "l", "ml", "nenhum(a)"]}
               />
-              {formik.errors.unit_of_measure &&
-                formik.touched.unit_of_measure && (
+              {formik.errors.payment_method &&
+                formik.touched.payment_method && (
                   <p className="text-red-500 text-xs -mt-3 mb-3">
-                    {formik.errors.unit_of_measure}
+                    {formik.errors.payment_method}
                   </p>
                 )}
 
-              <CashInput // preciso olhar como estar indo agora ... a questao do sifrão melhor tirar o quanto antes...
-                title="Preço de compra*"
-                placeholder="Digite o preço da compra"
-                value={formik.values.purchase_price}
-                name="purchase_price"
+              <NumericInput
+                title="Preço de Compra*"
+                placeholder="Digite o preço de compra"
+                value={formik.values.product.purchase_price}
+                name="product.purchase_price"
                 onValueChange={(value) =>
-                  formik.setFieldValue("purchase_price", value)
-                } // Corrigido para atualizar o Formik
+                  formik.setFieldValue("product.purchase_price", value)
+                }
                 className={
-                  formik.errors.purchase_price && formik.touched.purchase_price
+                  formik.errors.product?.purchase_price &&
+                  formik.touched.product?.purchase_price
                     ? "border-red-500"
                     : ""
                 }
               />
-              {formik.errors.purchase_price &&
-                formik.touched.purchase_price && (
+              {formik.errors.product?.purchase_price &&
+                formik.touched.product?.purchase_price && (
                   <p className="text-red-500 text-xs -mt-3 mb-3">
-                    {formik.errors.purchase_price}
+                    {formik.errors.product.purchase_price}
                   </p>
                 )}
 
               <NumberInput
                 title="Quantidade por unidade*"
                 placeholder="Digite a quantidade por unidade"
-                value={formik.values.quantity_per_unit}
+                value={formik.values.quantity}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                name="quantity_per_unit"
+                name="quantity"
                 className={
-                  formik.errors.quantity_per_unit &&
-                  formik.touched.quantity_per_unit
+                  formik.errors.quantity && formik.touched.quantity
                     ? "border-red-500"
                     : ""
                 }
               />
-              {formik.errors.quantity_per_unit &&
-                formik.touched.quantity_per_unit && (
-                  <p className="text-red-500 text-xs -mt-3 mb-3">
-                    {formik.errors.quantity_per_unit}
-                  </p>
-                )}
+              {formik.errors.quantity && formik.touched.quantity && (
+                <p className="text-red-500 text-xs -mt-3 mb-3">
+                  {formik.errors.quantity}
+                </p>
+              )}
             </div>
 
             <div>
-              <CashInput
+              <NumericInput
                 title="Preço de Venda*"
                 placeholder="Digite o preço de venda"
-                value={formik.values.sale_price}
-                name="sale_price"
+                value={formik.values.product.sale_price}
+                name="product.sale_price"
                 onValueChange={(value) =>
-                  formik.setFieldValue("sale_price", value)
-                } 
+                  formik.setFieldValue("product.sale_price", value)
+                }
                 className={
-                  formik.errors.sale_price && formik.touched.sale_price
+                  formik.errors.product?.sale_price &&
+                  formik.touched.product?.sale_price
                     ? "border-red-500"
                     : ""
                 }
               />
-              {formik.errors.sale_price && formik.touched.sale_price && (
-                <p className="text-red-500 text-xs -mt-3 mb-3">
-                  {formik.errors.sale_price}
-                </p>
-              )}
+              {formik.errors.product?.sale_price &&
+                formik.touched.product?.sale_price && (
+                  <p className="text-red-500 text-xs -mt-3 mb-3">
+                    {formik.errors.product.sale_price}
+                  </p>
+                )}
 
               <DateInput
                 title="Data de validade*"
                 placeholder="Digite a data de validade"
-                value={formik.values.expiry_date} // Assegure-se de que o valor aqui é yyyy-MM-dd
+                value={formik.values.expiry_date}
                 onChange={formik.handleChange}
                 name="expiry_date"
                 className={
@@ -184,40 +216,69 @@ export const RegisterProduct: React.FC = () => {
               <TextInput
                 title="Fornecedor*"
                 placeholder="Digite o fornecedor"
-                value={formik.values.supplier}
+                value={formik.values.product.supplier}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                name="supplier"
+                name="product.supplier"
                 className={
-                  formik.errors.supplier && formik.touched.supplier
+                  formik.errors.product?.supplier &&
+                  formik.touched.product?.supplier
                     ? "border-red-500"
                     : ""
                 }
               />
-              {formik.errors.supplier && formik.touched.supplier && (
-                <p className="text-red-500 text-xs -mt-3 mb-3">
-                  {formik.errors.supplier}
-                </p>
-              )}
+              {formik.errors.product?.supplier &&
+                formik.touched.product?.supplier && (
+                  <p className="text-red-500 text-xs -mt-3 mb-3">
+                    {formik.errors.product.supplier}
+                  </p>
+                )}
 
               <NumberInput
                 title="Código do Produto*"
                 placeholder="Digite o código do produto"
-                value={formik.values.code}
+                value={formik.values.product.code}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                name="code"
+                name="product.code"
                 className={
-                  formik.errors.code && formik.touched.code
+                  formik.errors.product?.code && formik.touched.product?.code
                     ? "border-red-500"
                     : ""
                 }
               />
-              {formik.errors.code && formik.touched.code && (
+              {formik.errors.product?.code && formik.touched.product?.code && (
                 <p className="text-red-500 text-xs -mt-3 mb-3">
-                  {formik.errors.code}
+                  {formik.errors.product.code}
                 </p>
               )}
+
+              <SelectInput
+                title="Metodo de Pagamento*"
+                value={formik.values.payment_method}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="Selecionar o método de pagamento"
+                name="payment_method"
+                className={
+                  formik.errors.product?.unit_of_measure &&
+                  formik.touched.product?.unit_of_measure
+                    ? "border-red-500"
+                    : ""
+                }
+                options={[
+                  "Dinheiro",
+                  "Pix",
+                  "Cartão de credito",
+                  "Cartão de débito",
+                ]}
+              />
+              {formik.errors.product?.unit_of_measure &&
+                formik.touched.product?.unit_of_measure && (
+                  <p className="text-red-500 text-xs -mt-3 mb-3">
+                    {formik.errors.product.unit_of_measure}
+                  </p>
+                )}
             </div>
 
             <button

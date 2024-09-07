@@ -5,7 +5,7 @@ import { Header } from "../../components/Header";
 import { Link } from "react-router-dom";
 import {
   deleteFunction,
-  fetchEmployees,
+  fetchEmployeesByCompany,
 } from "../../services/ServicesEmployees";
 import SearchBar from "../../components/SearchBar";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ export interface Employee {
   cpf: string;
   phone: string;
   education: string;
+  company_id: number;
   is_logged: boolean;
   createdAt: string;
   updatedAt: string;
@@ -30,11 +31,27 @@ const EmployeesList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [company_id, setCompanyId] = useState<number | null>(null);
 
   useEffect(() => {
+    const loadCompanyId = async () => {
+      try {
+        const company_id = Number(localStorage.getItem("company_id"));
+        setCompanyId(company_id);
+      } catch (error) {
+        setError("Erro ao buscar ID da empresa");
+      }
+    };
+
+    loadCompanyId();
+  }, []);
+
+  useEffect(() => {
+    if (company_id === null) return;
+
     const loadEmployees = async () => {
       try {
-        const data = await fetchEmployees();
+        const data = await fetchEmployeesByCompany();
         const sortedEmployees = data.sort((a: Employee, b: Employee) =>
           a.name.localeCompare(b.name)
         );
@@ -47,7 +64,7 @@ const EmployeesList: React.FC = () => {
     };
 
     loadEmployees();
-  }, []);
+  }, [company_id]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);

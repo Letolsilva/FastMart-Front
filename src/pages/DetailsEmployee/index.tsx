@@ -71,6 +71,9 @@ const EmployeeDetails: React.FC = () => {
                 <strong>Educação:</strong> {employee.education}
               </p>
               <p className="text-gray-700">
+                <strong>ID Empresa:</strong> {employee.company_id}
+              </p>
+              <p className="text-gray-700">
                 <strong>Criado em:</strong>{" "}
                 {new Date(employee.createdAt).toLocaleDateString()}
               </p>

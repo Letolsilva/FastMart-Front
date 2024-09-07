@@ -4,10 +4,10 @@ import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { toast } from "react-toastify";
 import { useSignIn } from "react-auth-kit";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = "http://localhost:3333";
+const API_URL = "http://localhost:3334";
 
 const LoginSchema = yup.object().shape({
   email: yup.string().required("E-mail é obrigatório"),
@@ -15,15 +15,22 @@ const LoginSchema = yup.object().shape({
 });
 
 export const Login: React.FC = () => {
-  const signIn = useSignIn();  // Hooks should be called at the top level
-  const navigate = useNavigate();  // Hooks should be called at the top level
+  const signIn = useSignIn(); // Hooks should be called at the top level
+  const navigate = useNavigate(); // Hooks should be called at the top level
 
-  const handleLogin = async (data: { email: string; password: string }) => {
+  const handleLogin = async (data: {
+    email: string;
+    password: string;
+    company_id: number;
+  }) => {
     try {
       const response = await axios.post(`${API_URL}/users/login`, data);
       if (response.status === 200) {
         const { token } = response.data;
+        const { company_id } = response.data.user;
+
         localStorage.setItem("authToken", token);
+        localStorage.setItem("company_id", company_id);
         toast.success("Usuário logado com sucesso!");
 
         signIn({
@@ -42,6 +49,8 @@ export const Login: React.FC = () => {
             toast.error("E-mail ou senha incorretos!");
           } else if (error.response.status === 403) {
             toast.error("Usuário já logado!");
+          } else if (error.response.status === 404) {
+            toast.error("Usuário inexistente!");
           }
         } else {
           toast.error("Erro ao buscar dados da API");
@@ -55,19 +64,26 @@ export const Login: React.FC = () => {
     initialValues: {
       email: "",
       password: "",
+      company_id: -1,
     },
     validationSchema: LoginSchema,
     onSubmit: async (values) => {
-      handleLogin({ email: values.email, password: values.password });
+      handleLogin({
+        email: values.email,
+        password: values.password,
+        company_id: values.company_id,
+      });
     },
   });
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-200 bg-opacity-50">
       <div className="max-w-6xl mx-auto p-8 bg-white border border-gray-300 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center text-primary">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-primary">
+          Login
+        </h2>
         <form onSubmit={formik.handleSubmit} className="grid grid-cols-1">
-          <div>  
+          <div>
             <TextInput
               title="Email"
               placeholder="Digite seu email"

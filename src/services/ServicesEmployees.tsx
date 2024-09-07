@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Employee } from "../pages/ListEmployees";
-const API_URL = "http://localhost:3333";
+const API_URL = "http://localhost:3334";
 import { useNavigate } from "react-router-dom";
 
 //Login
@@ -11,6 +11,7 @@ export async function PostLogin(
 ) {
   try {
     const response = await axios.post(`${API_URL}/users/login`, data);
+
     if (response.status === 200) {
       const { token } = response.data;
       localStorage.setItem("authToken", token);
@@ -35,14 +36,14 @@ export async function PostLogin(
 }
 
 export async function PostLogout(
-  id: any,
+  id: number,
   navigate: ReturnType<typeof useNavigate>
 ) {
   try {
-    console.log(id);
     const token = localStorage.getItem("authToken");
+    const company_id = localStorage.getItem("company_id");
     const response = await axios.post(
-      `${API_URL}/users/logout/${id}`,
+      `${API_URL}/users/logout/${id}/${company_id}`,
       {},
       {
         headers: {
@@ -74,14 +75,46 @@ export async function fetchEmployees(): Promise<Employee[]> {
     const response: AxiosResponse<{ users: Employee[] }> = await axios.get(
       `${API_URL}/users`
     );
-    if (Array.isArray(response.data.users)) {
+    if (response.data.users) {
       return response.data.users;
     } else {
-      throw new Error("A resposta da API não é um array");
+      throw new Error("A resposta da API não contém dados dos funcionários");
     }
   } catch (error) {
     console.error("Erro ao buscar dados da API:", error);
     throw new Error("Erro ao buscar dados da API");
+  }
+}
+
+export async function fetchEmployeesByCompany(): Promise<Employee[]> {
+  try {
+    const company_id = localStorage.getItem("company_id");
+
+    const response: AxiosResponse<{ users: Employee[] }> = await axios.get(
+      `${API_URL}/users/${company_id}`
+    );
+    console.log(response.data.users);
+
+    if (response.data.users) {
+      return response.data.users;
+    } else {
+      throw new Error("A resposta da API não contém dados dos funcionários");
+    }
+  } catch (error) {
+    console.error("Erro ao buscar dados da API:", error);
+    throw new Error("Erro ao buscar dados da API");
+  }
+}
+
+export async function fetchCompanyIdByEmail(email: string): Promise<number> {
+  try {
+    const response = await axios.get<{ company_id: number }>(
+      `${API_URL}/users/email/${email}`
+    );
+    return response.data.company_id;
+  } catch (error) {
+    console.error("Erro ao buscar company_id:", error);
+    throw new Error("Erro ao buscar company_id");
   }
 }
 
@@ -92,6 +125,7 @@ export async function fetchJustOneEmployee(
     const response: AxiosResponse<{ users: Employee[] }> = await axios.get(
       `${API_URL}/users`
     );
+
     const employee = response.data.users.find((user) => user.id === id);
     return employee || null;
   } catch (error) {
@@ -103,11 +137,16 @@ export async function fetchJustOneEmployee(
 export async function updateEmployeeData(data: Employee) {
   try {
     const token = localStorage.getItem("authToken");
-    const response = await axios.put(`${API_URL}/users/${data.id}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+
+    const response = await axios.put(
+      `${API_URL}/users/${data.id}/${data.company_id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (response.status === 200) {
       toast.success("Dados Atualizados com sucesso!");
     }
@@ -162,11 +201,16 @@ export async function deleteFunction(
 ) {
   try {
     const token = localStorage.getItem("authToken");
-    const response = await axios.delete(`${API_URL}/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const company_id = localStorage.getItem("company_id");
+
+    const response = await axios.delete(
+      `${API_URL}/users/${id}/${company_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (response.status === 200) {
       toast.success("Usuário deletado com sucesso!");
       navigate("/main");

@@ -12,9 +12,7 @@ export interface TypeProduct {
   name: string;
   unit_of_measure: string;
   purchase_price: string;
-  quantity_per_unit: string;
   sale_price: string;
-  expiry_date: string;
   supplier: string;
   code: string;
 }
@@ -30,6 +28,7 @@ const ProductsList: React.FC = () => {
     const loadProducts = async () => {
       try {
         const data = await fetchProducts();
+
         setProducts(data);
       } catch (error) {
         setError("Erro ao buscar dados da API");
