@@ -54,6 +54,9 @@ const EmployeeDetails: React.FC = () => {
               <p className="text-gray-800">
                 <strong>Nome:</strong> {employee.name}
               </p>
+              <p className="text-gray-800">
+                <strong>Código:</strong> {employee.code}
+              </p>
               <p className="text-gray-700">
                 <strong>Email:</strong> {employee.email}
               </p>
