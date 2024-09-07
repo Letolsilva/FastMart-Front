@@ -1,5 +1,6 @@
 import React from "react";
 import { useFormik } from "formik";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 import { TextInput } from "../../../components/TextInput";
 import { DateInput } from "../../../components/DateInput";
@@ -8,6 +9,7 @@ import { SelectInput } from "../../../components/SelectInput";
 import { Header } from "../../../components/Header";
 import { registerProduct } from "../../../services/ServicesProduct";
 import NumericInput from "../../../components/NumericInput";
+import { useNavigate } from "react-router-dom";
 
 export const ValidationProdcutSchema = yup.object().shape({
   product: yup.object().shape({
@@ -28,6 +30,7 @@ export const ValidationProdcutSchema = yup.object().shape({
 });
 
 export const RegisterProduct: React.FC = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       date: "",
@@ -58,6 +61,8 @@ export const RegisterProduct: React.FC = () => {
       );
 
       await registerProduct(values);
+      toast.success("Cadastro realizado!");
+      navigate("/main");
     },
   });
   return (
