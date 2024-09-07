@@ -90,32 +90,51 @@ export async function fetchProducts(): Promise<TypeProduct[]> {
 
 export async function deleteProduct(
   code: any,
-  navigate: ReturnType<typeof useNavigate>){
-    try {
-      const token = localStorage.getItem("authToken");
-      const company_id = localStorage.getItem("company_id");
-      const response = await axios.delete(`${API_URL}/products/${code}/${company_id}`, {
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    const token = localStorage.getItem("authToken");
+    const company_id = localStorage.getItem("company_id");
+    const response = await axios.delete(
+      `${API_URL}/products/${code}/${company_id}`,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      if (response.status === 200) {
-        toast.success("Produto deletado com sucesso!");
-        navigate("/product/list");
       }
-      return response.data;
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          if (error.response.status === 404) {
-            toast.error("Produto não encontrado!");
-          } else if (error.response.status === 500) {
-            toast.error("Erro interno!");
-          }
-        }
-        navigate("/product/list");
-      }
-  
-      throw error;
+    );
+    if (response.status === 200) {
+      toast.success("Produto deletado com sucesso!");
+      navigate("/product/list");
     }
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 404) {
+          toast.error("Produto não encontrado!");
+        } else if (error.response.status === 500) {
+          toast.error("Erro interno!");
+        }
+      }
+      navigate("/product/list");
+    }
+
+    throw error;
   }
+}
+
+// Função para buscar produtos que estão prestes a vencer
+export const getExpiringProducts = async (days: number) => {
+  try {
+    const company_id = localStorage.getItem("company_id");
+
+    const response = await axios.get(
+      `${API_URL}/products/get-expiring-products/${company_id}?days=${days}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar produtos que vão vencer:", error);
+    throw error;
+  }
+};
