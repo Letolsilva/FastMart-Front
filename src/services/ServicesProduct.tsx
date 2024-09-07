@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { TypeProduct } from "../pages/Products/ListProducts";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:3334";
 
@@ -15,7 +16,7 @@ export async function registerProduct(data: any) {
     if (response.status === 200) {
       toast.success("Produto cadastrado com sucesso!");
     }
-
+    
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -87,3 +88,35 @@ export async function fetchProducts(): Promise<TypeProduct[]> {
     throw new Error("Erro ao buscar dados da API");
   }
 }
+
+export async function deleteProduct(
+  code: any,
+  navigate: ReturnType<typeof useNavigate>){
+    try {
+      const token = localStorage.getItem("authToken");
+      const company_id = localStorage.getItem("company_id");
+      const response = await axios.delete(`${API_URL}/products/${code}/${company_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Produto deletado com sucesso!");
+        navigate("/product/list");
+      }
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          if (error.response.status === 404) {
+            toast.error("Produto não encontrado!");
+          } else if (error.response.status === 500) {
+            toast.error("Erro interno!");
+          }
+        }
+        navigate("/product/list");
+      }
+  
+      throw error;
+    }
+  }

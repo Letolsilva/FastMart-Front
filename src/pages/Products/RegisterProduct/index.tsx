@@ -48,6 +48,7 @@ export const RegisterProduct: React.FC = () => {
     onSubmit: async (values) => {
       const date = new Date(values.expiry_date);
       const formattedDate = date.toISOString().split("T")[0];
+      
       values.expiry_date = formattedDate;
 
       values.product.sale_price = values.product.sale_price.replace(/,/g, ".");

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-import { fetchProducts } from "../../../services/ServicesProduct";
+import { fetchProducts, deleteProduct } from "../../../services/ServicesProduct";
 import { Header } from "../../../components/Header";
 import SearchBar from "../../../components/SearchBar";
 import { useNavigate } from "react-router-dom";
@@ -68,6 +68,10 @@ const ProductsList: React.FC = () => {
     navigate(`/dados-products/${id}`);
   };
 
+  const handleDelete = async (code: any) => {
+    await deleteProduct(code, navigate);
+  };
+
   return (
     <div className="p-4">
       <Header showIcon={true} backRoute="/main" />
@@ -95,9 +99,19 @@ const ProductsList: React.FC = () => {
                   <button className="text-neutral-500 hover:text-purple-800">
                     <i className="fas fa-edit"></i>
                   </button>
-                  <button className="text-neutral-500 hover:text-purple-800">
+                  <button className="text-neutral-500 hover:text-purple-800"
+                    onClick={() => {
+                      const confirmed = window.confirm(
+                        `Você quer mesmo deletar ${product.name}?`
+                      );
+                      if (confirmed) {
+                        handleDelete(product.code);
+                      }
+                    }}
+                  >
                     <i className="fas fa-trash"></i>
                   </button>
+
                 </div>
               </li>
             ))}
