@@ -48,13 +48,17 @@ export const Sales: React.FC = () => {
         updatedProducts[index].quantity = quantity;
         setSelectedProducts(updatedProducts);
     };
+    const handleDelete = (index: number) => {
+        const updatedProducts = selectedProducts.filter((_, i) => i !== index);
+        setSelectedProducts(updatedProducts);
+    };
     //console.log(selectedProducts);
     
     const formik = useFormik({
         initialValues: {
             s: "",
             q: 1,
-            cash_register: -1,
+            cash_register: 0,
             payment_method: "",
             products: []
         },
@@ -73,7 +77,6 @@ export const Sales: React.FC = () => {
                 ...values,
                 products: productsToSend,
               };
-              console.log(dataToSend);
               await recordSale(dataToSend, navigate);
         },
   });
@@ -174,6 +177,11 @@ export const Sales: React.FC = () => {
                         }
                         name={`quantity-${index}`}
                       />
+                      <button
+                      className="text-neutral-500 hover:text-purple-800 fas fa-trash ml-4"
+                      type="button"
+                      onClick={() => handleDelete(index)}
+                    ></button>
                     </div>
                   ))}
                 </div>
