@@ -88,6 +88,34 @@ export async function fetchProducts(): Promise<TypeProduct[]> {
   }
 }
 
+export async function fetchSales(): Promise<any[]> {
+  try {
+    const token = localStorage.getItem("authToken");
+    const company_id = localStorage.getItem("company_id");
+
+    if (!token) {
+      throw new Error("Token de autenticação não encontrado");
+    }
+
+    const response: AxiosResponse<{ finances: any[] }> =
+      await axios.get(`${API_URL}/finances/${company_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data.finances);
+      
+    if (Array.isArray(response.data.finances)) {
+      return response.data.finances;
+    } else {
+      throw new Error("A resposta da API não contém um array de vendas");
+    }
+  } catch (error) {
+    console.error("Erro ao buscar dados da API:", error);
+    throw new Error("Erro ao buscar dados da API");
+  }
+}
+
 export async function deleteProduct(
   code: any,
 
@@ -153,6 +181,43 @@ export async function recordSale(data: any, navigate: ReturnType<typeof useNavig
       }
     }
 
+    throw error;
+  }
+}
+
+export async function deleteSale(
+  id: any,
+
+  navigate: ReturnType<typeof useNavigate>){
+    try {
+      const token = localStorage.getItem("authToken");
+      const company_id = localStorage.getItem("company_id");
+      const response = await axios.delete(`${API_URL}/finances/cancel-sale/${company_id}`,{
+
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          saleId: id
+        }
+      }
+
+    );
+    toast.success("Venda cancelada com sucesso!");
+    navigate("/main");
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 404) {
+          toast.error("Registro não encontrado!");
+        } else if (error.response.status === 500) {
+          toast.error("Erro interno!");
+        }
+      }
+      navigate("/cancel-sale");
+    }
+    
     throw error;
   }
 }

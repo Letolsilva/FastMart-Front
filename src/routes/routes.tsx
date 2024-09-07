@@ -10,6 +10,7 @@ import ProductsList from "../pages/Products/ListProducts";
 import ProductDetails from "../pages/Products/DetailsProducts";
 import EditCompanyPage from "../pages/Company/Edit";
 import { Sales } from "../pages/Sales";
+import { CancelSale } from "../pages/CancelSale";
 
 export const AppRouter = () => {
   return (
@@ -25,8 +26,10 @@ export const AppRouter = () => {
 
       <Route path="/product/list" element={<ProductsList />} />
       <Route path="/dados-products/:id" element={<ProductDetails />} />
+      <Route path="/cancel-sale" element={<CancelSale />} />
 
       <Route path="/edit/company" element={<EditCompanyPage />} />
+
     </Routes>
   );
 };
