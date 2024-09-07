@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-import { fetchProducts, deleteProduct } from "../../../services/ServicesProduct";
+import {
+  fetchProducts,
+  deleteProduct,
+} from "../../../services/ServicesProduct";
 import { Header } from "../../../components/Header";
 import SearchBar from "../../../components/SearchBar";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +18,8 @@ export interface TypeProduct {
   sale_price: string;
   supplier: string;
   code: string;
+  expiry_date: string;
+  quantity_per_unit: number;
 }
 
 const ProductsList: React.FC = () => {
@@ -99,7 +104,8 @@ const ProductsList: React.FC = () => {
                   <button className="text-neutral-500 hover:text-purple-800">
                     <i className="fas fa-edit"></i>
                   </button>
-                  <button className="text-neutral-500 hover:text-purple-800"
+                  <button
+                    className="text-neutral-500 hover:text-purple-800"
                     onClick={() => {
                       const confirmed = window.confirm(
                         `Você quer mesmo deletar ${product.name}?`
@@ -111,7 +117,6 @@ const ProductsList: React.FC = () => {
                   >
                     <i className="fas fa-trash"></i>
                   </button>
-
                 </div>
               </li>
             ))}
