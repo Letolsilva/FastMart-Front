@@ -275,7 +275,7 @@ export const RegisterProduct: React.FC = () => {
                 options={[
                   "Dinheiro",
                   "Pix",
-                  "Cartão de credito",
+                  "Cartão de crédito",
                   "Cartão de débito",
                 ]}
               />
