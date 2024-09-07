@@ -8,7 +8,7 @@ const MainPage: React.FC = () => {
       <Header />
       {/* Conteúdo Principal */}
       <main className="flex-grow flex items-center justify-center p-12">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-5xl">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 w-full max-w-5xl">
           <MenuMain
             nome={"Cadastrar Funcionário"}
             local="./register"
@@ -17,7 +17,6 @@ const MainPage: React.FC = () => {
             nome={"Listar Funcionários"}
             local="./lista-funcionarios"
           ></MenuMain>
-          <MenuMain nome={"Atualizar Empresa"} local="/"></MenuMain>
           <MenuMain
             nome={"Cadastrar Produto"}
             local="./registrar-produto"
@@ -26,8 +25,6 @@ const MainPage: React.FC = () => {
             nome={"Listar Produtos"}
             local="/product/list"
           ></MenuMain>
-          <MenuMain nome={"Atualizar Produto"} local="/"></MenuMain>
-          <MenuMain nome={"Remover Produto"} local="/"></MenuMain>
           <MenuMain nome={"Registro Financeiro"} local="/"></MenuMain>
           <MenuMain nome={"Análise de Dados"} local="/"></MenuMain>
         </ul>
