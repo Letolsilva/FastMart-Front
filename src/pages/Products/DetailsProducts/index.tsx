@@ -42,8 +42,7 @@ const ProductDetails: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Header showIcon={true} backRoute="/product/list" />
-
+      <Header showIcon={true} backRoute="/lista-produtos" />
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white border border-gray-300 p-8 rounded-lg shadow-lg">
           <h1 className="text-3xl font-bold mb-6 text-purple-800">

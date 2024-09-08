@@ -1,4 +1,4 @@
-import { Header } from "../../components/Header";
+mport { Header } from "../../components/Header";
 import MenuMain from "../../components/MenuMain";
 
 const MainPage: React.FC = () => {

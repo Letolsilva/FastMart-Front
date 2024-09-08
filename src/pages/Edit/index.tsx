@@ -1,6 +1,10 @@
 import { Header } from "../../components/Header";
 import { useParams } from "react-router-dom";
 
+import {
+  fetchJustOneEmployee,
+  updateEmployeeData,
+} from "../../services/APIservices";
 import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
@@ -100,6 +104,7 @@ const EditPage: React.FC = () => {
     };
     fetchData();
   }, [employeeId]);
+
 
   if (loading) {
     return (
@@ -221,7 +226,6 @@ const EditPage: React.FC = () => {
                   {formik.errors.education}
                 </p>
               )}
-
               <p className="text-gray-700">
                 <strong className="p-1">Criado em: </strong>{" "}
                 {new Date(employee.createdAt).toLocaleDateString()}

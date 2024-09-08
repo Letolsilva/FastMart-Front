@@ -4,7 +4,7 @@ import { NumericFormat } from "react-number-format";
 interface NumericInputProps {
   title: string;
   placeholder: string;
-  value: string;
+  value: number;
   name: string;
   onValueChange: (value: string) => void;
   className?: string;
@@ -19,10 +19,11 @@ const NumericInput: React.FC<NumericInputProps> = ({
   className,
 }) => {
   return (
-    <div className="flex flex-col mb-4">
-      <label className="mb-2 text-gray-700">{title}</label>
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700">{title}</label>
       <NumericFormat
-        className={`px-4 py-2 rounded-lg bg-white border-2 border-gray-300 focus:outline-none focus:border-primary hover:border-primary transition-colors ${className}`}
+        className={`mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${className}`}
+
         placeholder={placeholder}
         value={value}
         onValueChange={(values) => onValueChange(values.value)}
