@@ -22,15 +22,17 @@ export const Login: React.FC = () => {
     email: string;
     password: string;
     company_id: number;
+    code: number;
   }) => {
     try {
       const response = await axios.post(`${API_URL}/users/login`, data);
       if (response.status === 200) {
         const { token } = response.data;
-        const { company_id } = response.data.user;
+        const { company_id, code } = response.data.user;
 
         localStorage.setItem("authToken", token);
         localStorage.setItem("company_id", company_id);
+        localStorage.setItem("code", code);
         toast.success("Usuário logado com sucesso!");
 
         signIn({
@@ -65,6 +67,7 @@ export const Login: React.FC = () => {
       email: "",
       password: "",
       company_id: -1,
+      code: -1,
     },
     validationSchema: LoginSchema,
     onSubmit: async (values) => {
@@ -72,6 +75,7 @@ export const Login: React.FC = () => {
         email: values.email,
         password: values.password,
         company_id: values.company_id,
+        code: values.code,
       });
     },
   });
