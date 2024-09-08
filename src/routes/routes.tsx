@@ -5,7 +5,6 @@ import { Login } from "../pages/Login";
 import EmployeesList from "../pages/ListEmployees";
 import EmployeeDetails from "../pages/DetailsEmployee";
 import EditPage from "../pages/Edit";
-import { RegisterProduct } from "../pages/RegisterProduct";
 import EditProduct from "../pages/Products/EditProducts";
 import { RegisterProduct } from "../pages/Products/RegisterProduct";
 import ProductsList from "../pages/Products/ListProducts";
@@ -15,6 +14,7 @@ import { Sales } from "../pages/Sales";
 import { CancelSale } from "../pages/CancelSale";
 import { PrivateRoute } from "../components/PrivateRoute";
 
+
 const isAuthenticated = () => {
   // Função que verifica se o usuário está autenticado
   return localStorage.getItem('authToken') ? true : false;
@@ -23,8 +23,7 @@ const isAuthenticated = () => {
 export const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-
+      <Route path="/" element={<Login />} />
       <Route element={<PrivateRoute isAuthenticated={isAuthenticated()}/>}>
         <Route path="/main" element={<MainPage />} />
         <Route path="/sales" element={<Sales />} />
@@ -33,21 +32,12 @@ export const AppRouter = () => {
         <Route path="/lista-funcionarios" element={<EmployeesList />} />
         <Route path="/dados-funcionario/:id" element={<EmployeeDetails />} />
         <Route path="/edit/:id" element={<EditPage />} />
-
         <Route path="/editar-produto/:id" element = {<EditProduct/>} />
         <Route path="/lista-produtos" element={<ProductsList />} />
         <Route path="/dados-products/:id" element={<ProductDetails />} />
-
         <Route path="/edit/company" element={<EditCompanyPage />} />
-
-
-        <Route path="/product/list" element={<ProductsList />} />
-        <Route path="/dados-products/:id" element={<ProductDetails />} />
         <Route path="/cancel-sale" element={<CancelSale />} />
-
-        <Route path="/edit/company" element={<EditCompanyPage />} />
       </Route>
-
     </Routes>
   );
 };

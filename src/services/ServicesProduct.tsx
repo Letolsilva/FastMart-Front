@@ -123,9 +123,9 @@ export async function fetchSales(): Promise<any[]> {
     }
 
     const response: AxiosResponse<{ finances: any[] }> =
-      await axios.get(${API_URL}/finances/${company_id}, {
+      await axios.get(`${API_URL}/finances/${company_id}`, {
         headers: {
-          Authorization: Bearer ${token},
+          Authorization: `Bearer ${token}`,
         },
       });
       console.log(response.data.finances);
@@ -298,4 +298,6 @@ export async function updateProductData(data: TypeProduct_lucas) {
         toast.error("Erro ao buscar dados da API");
       }
     }
-    thr
+    throw error;
+  }
+};

@@ -55,7 +55,7 @@ export async function PostLogout(
       localStorage.removeItem('authToken');
       localStorage.removeItem('company_id');
       toast.success("Usuário deslogado com sucesso!");
-      navigate("/login");
+      navigate("/");
     }
     return response.data;
   } catch (error: unknown) {

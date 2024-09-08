@@ -1,5 +1,5 @@
 import { Header } from "../../../components/Header";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
 import { TextInput } from "../../../components/TextInput";
 import { NumberInput } from "../../../components/NumberInput";
@@ -24,8 +24,8 @@ export const ValidationEditProdcutSchema = yup.object().shape({
     .number()
     .typeError("Preço de venda deve ser um número")
     .required("Preço de venda é obrigatório"),
-    expiry_date: yup.date().required("Data de validade é obrigatória"),
-    supplier: yup.string().required("Fornecedor é obrigatório"),
+  expiry_date: yup.date().required("Data de validade é obrigatória"),
+  supplier: yup.string().required("Fornecedor é obrigatório"),
 });
 
 export interface TypeProduct_lucas {
@@ -48,9 +48,10 @@ export interface TypeProduct_lucas {
 export const EditProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const productId = id ? parseInt(id, 10) : NaN;
-  const [product, setProduct] = useState<TypeProduct_lucas >();
+  const [product, setProduct] = useState<TypeProduct_lucas>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -62,18 +63,19 @@ export const EditProduct: React.FC = () => {
       sale_price: 0,
       expiry_date: "",
       supplier: "",
-      payment_method: "", 
-      date: "", 
-      id: 0, 
-      code: 0, 
-      createdAt: "", 
+      payment_method: "",
+      date: "",
+      id: 0,
+      code: 0,
+      createdAt: "",
       updatedAt: "",
     },
     validationSchema: ValidationEditProdcutSchema,
     onSubmit: async (values: TypeProduct_lucas) => {
-      try{
+      try {
         await updateProductData(values);
         toast.success("Dados atualizados com sucesso!");
+        navigate("/lista-produtos");
       } catch (error) {
         toast.error("Erro ao atualizar os dados.");
       }
@@ -85,7 +87,6 @@ export const EditProduct: React.FC = () => {
       try {
         const fetchedProduct = await fetchJustOneProduct(productId);
         if (fetchedProduct) {
-          // Formatando a data de vencimento no formato YYYY-MM-DD
           const formattedExpiryDate = fetchedProduct.expiry_date
             ? new Date(fetchedProduct.expiry_date).toISOString().split("T")[0]
             : "";
@@ -101,13 +102,12 @@ export const EditProduct: React.FC = () => {
             sale_price: fetchedProduct.sale_price,
             expiry_date: formattedExpiryDate,
             supplier: fetchedProduct.supplier,
-            payment_method: fetchedProduct.payment_method, 
-            date: fetchedProduct.date, 
-            id: fetchedProduct.id, 
-            code: fetchedProduct.code, 
-            createdAt: fetchedProduct.createdAt, 
+            payment_method: fetchedProduct.payment_method,
+            date: fetchedProduct.date,
+            id: fetchedProduct.id,
+            code: fetchedProduct.code,
+            createdAt: fetchedProduct.createdAt,
             updatedAt: fetchedProduct.updatedAt,
-
           });
         }
       } catch (error) {
@@ -165,7 +165,7 @@ export const EditProduct: React.FC = () => {
                     <p className="text-red-500 text-xs">{formik.errors.name}</p>
                   )}
                 </div>
-  
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col">
                     <NumberInput
@@ -181,11 +181,14 @@ export const EditProduct: React.FC = () => {
                           : "text-gray-700"
                       }
                     />
-                    {formik.errors.quantity_per_unit && formik.touched.quantity_per_unit && (
-                      <p className="text-red-500 text-xs">{formik.errors.quantity_per_unit}</p>
-                    )}
+                    {formik.errors.quantity_per_unit &&
+                      formik.touched.quantity_per_unit && (
+                        <p className="text-red-500 text-xs">
+                          {formik.errors.quantity_per_unit}
+                        </p>
+                      )}
                   </div>
-  
+
                   <div className="flex flex-col">
                     <SelectInput
                       title="Unidade de Medida*"
@@ -202,14 +205,15 @@ export const EditProduct: React.FC = () => {
                       }
                       options={["kg", "g", "l", "ml", "nenhum(a)"]}
                     />
-                    {formik.errors.unit_of_measure && formik.touched.unit_of_measure && (
-                      <p className="text-red-500 text-xs -mt-3 mb-3">
-                        {formik.errors.unit_of_measure}
-                      </p>
-                    )}
+                    {formik.errors.unit_of_measure &&
+                      formik.touched.unit_of_measure && (
+                        <p className="text-red-500 text-xs -mt-3 mb-3">
+                          {formik.errors.unit_of_measure}
+                        </p>
+                      )}
                   </div>
                 </div>
-  
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col">
                     <NumericInput
@@ -218,7 +222,10 @@ export const EditProduct: React.FC = () => {
                       value={formik.values.purchase_price}
                       name="purchase_price"
                       onValueChange={(value) =>
-                        formik.setFieldValue("purchase_price", parseFloat(value))
+                        formik.setFieldValue(
+                          "purchase_price",
+                          parseFloat(value)
+                        )
                       }
                       className={
                         formik.errors.purchase_price &&
@@ -227,13 +234,14 @@ export const EditProduct: React.FC = () => {
                           : ""
                       }
                     />
-                    {formik.errors.purchase_price && formik.touched.purchase_price && (
-                      <p className="text-red-500 text-xs">
-                        {formik.errors.purchase_price}
-                      </p>
-                    )}
+                    {formik.errors.purchase_price &&
+                      formik.touched.purchase_price && (
+                        <p className="text-red-500 text-xs">
+                          {formik.errors.purchase_price}
+                        </p>
+                      )}
                   </div>
-  
+
                   <div className="flex flex-col">
                     <NumericInput
                       title="Preço de Venda*"
@@ -256,7 +264,7 @@ export const EditProduct: React.FC = () => {
                     )}
                   </div>
                 </div>
-  
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col">
                     <TextInput
@@ -272,10 +280,12 @@ export const EditProduct: React.FC = () => {
                       }
                     />
                     {formik.errors.supplier && formik.touched.supplier && (
-                      <p className="text-red-500 text-xs">{formik.errors.supplier}</p>
+                      <p className="text-red-500 text-xs">
+                        {formik.errors.supplier}
+                      </p>
                     )}
                   </div>
-  
+
                   <div className="flex flex-col">
                     <DateInput
                       title="Data de Vencimento*"
@@ -288,14 +298,15 @@ export const EditProduct: React.FC = () => {
                           : ""
                       }
                     />
-                    {formik.errors.expiry_date && formik.touched.expiry_date && (
-                      <p className="text-red-500 text-xs -mt-3 mb-3">
-                        {formik.errors.expiry_date}
-                      </p>
-                    )}
+                    {formik.errors.expiry_date &&
+                      formik.touched.expiry_date && (
+                        <p className="text-red-500 text-xs -mt-3 mb-3">
+                          {formik.errors.expiry_date}
+                        </p>
+                      )}
                   </div>
                 </div>
-  
+
                 <div className="flex justify-center">
                   <button
                     type="submit"
@@ -313,7 +324,6 @@ export const EditProduct: React.FC = () => {
       </div>
     </div>
   );
-
 };
 
 export default EditProduct;

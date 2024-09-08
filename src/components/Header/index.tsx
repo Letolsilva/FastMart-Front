@@ -85,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   useEffect(() => {
     if (redirect) {
-      navigate("/login");
+      navigate("/");
     }
   }, [redirect, navigate]);
 

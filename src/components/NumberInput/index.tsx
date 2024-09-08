@@ -3,7 +3,7 @@ import React from "react";
 interface NumberInputProps {
   title: string;
   placeholder?: string;
-  value?: number;
+  value?: string | number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;
@@ -24,14 +24,14 @@ export const NumberInput: React.FC<NumberInputProps> = ({
       <label className="mb-2 text-gray-700">{title}</label>
       <input
         type="number"
-        value={value ?? ''}
+        value={value ?? ""}
         onChange={onChange}
         onBlur={onBlur}
         placeholder={placeholder}
         name={name}
         className={`px-4 py-2 rounded-lg bg-white border-2 border-gray-300 focus:outline-none focus:border-primary hover:border-primary transition-colors ${className}`}
-        min="0" // Define o valor mínimo permitido (opcional)
-        step="any" // Permite qualquer valor decimal (opcional)
+        min="0"
+        step="any"
       />
     </div>
   );

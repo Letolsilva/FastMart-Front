@@ -7,6 +7,7 @@ import { CPFInput } from "../../components/CPFInput";
 import { CreateUser } from "../../services/ServicesEmployees";
 import { Header } from "../../components/Header";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const ValidationUserSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),
@@ -47,6 +48,7 @@ export const Register: React.FC = () => {
       try {
         await CreateUser(values);
         formik.resetForm();
+        toast.success("Funcionário cadastrado com sucesso");
         navigate("/main");
       } catch (error) {
         console.error("Erro ao cadastrar:", error);

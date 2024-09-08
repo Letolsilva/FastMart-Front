@@ -12,7 +12,6 @@ import SearchBar from "../../../components/SearchBar";
 import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 
-
 export interface TypeProduct {
   id: number;
   name: string;
@@ -71,7 +70,7 @@ const ProductsList: React.FC = () => {
 
   const handleSearchExpiringProducts = async () => {
     if (modalDaysUntilExpiry === 0) {
-      setExpiryError("Digite um número valido)");
+      setExpiryError("Digite um número valido");
       return;
     }
 
@@ -141,7 +140,6 @@ const ProductsList: React.FC = () => {
     navigate(`/dados-products/${id}`);
   };
 
-
   const handleDelete = async (code: string) => {
     await deleteProduct(code, navigate);
   };
@@ -150,12 +148,11 @@ const ProductsList: React.FC = () => {
     <div className="p-4">
       <Header showIcon={true} backRoute="/main" />
       <div className="border border-gray-300 p-10 rounded-lg shadow-md mt-5">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-purple-800 flex-shrink-0 w-[65rem]">
+        <div className="flex md:flex-row flex-col items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold text-purple-800">
             Produtos Cadastrados
           </h1>
-
-          <div className="flex space-x-4 flex-grow">
+          <div className="flex gap-6">
             <SearchBar
               searchTerm={searchTerm}
               onSearchChange={handleSearchChange}
@@ -164,7 +161,7 @@ const ProductsList: React.FC = () => {
 
             <button
               onClick={openModal}
-              className="border border-purple-900 text-purple-900 hover:text-purple-700 hover:border-purple-700 transition-colors rounded-md w-56 text-center h-10 flex items-center justify-center"
+              className="border border-purple-900 text-purple-900 hover:text-purple-700 hover:border-purple-700 transition-colors rounded-md text-center w-52 pl-1 pr-1"
             >
               Consultar Validade
             </button>
@@ -174,39 +171,46 @@ const ProductsList: React.FC = () => {
         {expiryError && <p className="text-red-500">{expiryError}</p>}
 
         {/* List of filtered products */}
-        {filteredProducts.length > 0 ? (
-          <ul className="space-y-2">
-            {filteredProducts.map((product) => (
-              <li
+        <ul className="space-y-2">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <Link
                 key={product.id}
-                onClick={() => handleProductClick(product.id)}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
+                to={`/dados-products/${product.id}`}
+                className="block"
               >
-                <span>{product.name}</span>
-                <div className="flex space-x-5">
-                  <button className="text-neutral-500 hover:text-purple-800">
-                    <i className="fas fa-edit"></i>
-                  </button>
-                  <button
-                    className="text-neutral-500 hover:text-purple-800"
-                    onClick={() => {
-                      const confirmed = window.confirm(
-                        `Você quer mesmo deletar ${product.name}?`
-                      );
-                      if (confirmed) {
-                        handleDelete(product.code);
-                      }
-                    }}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-center text-gray-500">Nenhum produto encontrado</p>
-        )}
+                <li className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                  {product.name}
+                  <div className="flex space-x-5">
+                    <Link
+                      to={`/editar-produto/${product.id}`}
+                      className="text-neutral-500 hover:text-purple-800"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </Link>
+                    <button
+                      className="text-neutral-500 hover:text-purple-800"
+                      onClick={() => {
+                        const confirmed = window.confirm(
+                          `Você quer mesmo deletar ${product.name}?`
+                        );
+                        if (confirmed) {
+                          handleDelete(product.code);
+                        }
+                      }}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </li>
+              </Link>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">
+              Nenhum produto encontrado
+            </p>
+          )}
+        </ul>
 
         {/* Modal for expiring products */}
         {modalOpen && (
