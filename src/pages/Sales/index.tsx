@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { NumberInput } from "../../components/NumberInput";
 import { SelectInput } from "../../components/SelectInput";
 import { Header } from "../../components/Header";
-import { fetchProducts} from "../../services/ServicesProduct";
+import { fetchProducts } from "../../services/ServicesProduct";
 import { TypeProduct } from "../Products/ListProducts";
 import { recordSale } from "../../services/ServicesProduct";
 import { useNavigate } from "react-router-dom";
@@ -16,69 +16,70 @@ export const ValidationProdcutSchema = yup.object().shape({
 });
 
 export const Sales: React.FC = () => {
-    const navigate = useNavigate();
-    const [products, setProducts] = useState<TypeProduct[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedProducts, setSelectedProducts] = useState<
-        { product: TypeProduct; quantity: number;}[]
-    >([]);
+  const navigate = useNavigate();
+  const [products, setProducts] = useState<TypeProduct[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedProducts, setSelectedProducts] = useState<
+    { product: TypeProduct; quantity: number }[]
+  >([]);
 
-    useEffect(() => {
-        const loadProducts = async () => {
-        try {
-            const fetchedProducts = await fetchProducts();
-            setProducts(fetchedProducts);  // Armazena os produtos no estado
-        } catch (error) {
-            setError("Erro ao buscar dados da API");
-        }
-        };
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const fetchedProducts = await fetchProducts();
+        setProducts(fetchedProducts); // Armazena os produtos no estado
+      } catch (error) {
+        setError("Erro ao buscar dados da API");
+      }
+    };
 
-        loadProducts();
-    }, []);
-    
-    const handleProductSelect = (productName: string) => {        
-        const product = products.find((p) => p.name === productName);
-        if (product && !selectedProducts.some((p) => p.product.name === productName)) {
-          setSelectedProducts([...selectedProducts, { product, quantity: 1}]);
-        }
+    loadProducts();
+  }, []);
+
+  const handleProductSelect = (productName: string) => {
+    const product = products.find((p) => p.name === productName);
+    if (
+      product &&
+      !selectedProducts.some((p) => p.product.name === productName)
+    ) {
+      setSelectedProducts([...selectedProducts, { product, quantity: 1 }]);
+    }
+  };
+
+  const handleQuantityChange = (index: number, quantity: number) => {
+    const updatedProducts = [...selectedProducts];
+    updatedProducts[index].quantity = quantity;
+    setSelectedProducts(updatedProducts);
+  };
+  const handleDelete = (index: number) => {
+    const updatedProducts = selectedProducts.filter((_, i) => i !== index);
+    setSelectedProducts(updatedProducts);
+  };
+
+
+  const formik = useFormik({
+    initialValues: {
+      s: "",
+      q: 1,
+      cash_register: 0,
+      payment_method: "",
+      products: [],
+    },
+
+    validationSchema: ValidationProdcutSchema,
+    onSubmit: async (values) => {
+      const productsToSend = selectedProducts.map((item) => ({
+        code: item.product.code,
+        quantity: item.quantity,
+        name: item.product.name,
+      }));
+
+      const dataToSend = {
+        ...values,
+        products: productsToSend,
       };
-    
-    const handleQuantityChange = (index: number, quantity: number) => {
-        const updatedProducts = [...selectedProducts];
-        updatedProducts[index].quantity = quantity;
-        setSelectedProducts(updatedProducts);
-    };
-    const handleDelete = (index: number) => {
-        const updatedProducts = selectedProducts.filter((_, i) => i !== index);
-        setSelectedProducts(updatedProducts);
-    };
-    //console.log(selectedProducts);
-    
-    const formik = useFormik({
-        initialValues: {
-            s: "",
-            q: 1,
-            cash_register: 0,
-            payment_method: "",
-            products: []
-        },
-        
-        validationSchema: ValidationProdcutSchema,
-        onSubmit: async (values) => {
-            
-            const productsToSend = selectedProducts.map(item => ({
-                code: item.product.code,
-                quantity: item.quantity,
-                name: item.product.name,
-              }));
-        
-              // Set the products field in formik values
-              const dataToSend = {
-                ...values,
-                products: productsToSend,
-              };
-              await recordSale(dataToSend, navigate);
-        },
+      await recordSale(dataToSend, navigate);
+    },
   });
 
   return (
@@ -94,7 +95,6 @@ export const Sales: React.FC = () => {
             className="grid grid-cols-3 gap-8"
           >
             <div>
-
               <NumberInput
                 title="Número do caixa*"
                 placeholder="Digite o número do caixa"
@@ -116,7 +116,6 @@ export const Sales: React.FC = () => {
             </div>
 
             <div>
-              
               <SelectInput
                 title="Método de Pagamento*"
                 value={formik.values.payment_method}
@@ -125,8 +124,7 @@ export const Sales: React.FC = () => {
                 placeholder="Selecionar o método de pagamento"
                 name="payment_method"
                 className={
-                  formik.errors.payment_method &&
-                  formik.touched.payment_method
+                  formik.errors.payment_method && formik.touched.payment_method
                     ? "border-red-500"
                     : ""
                 }
@@ -145,17 +143,15 @@ export const Sales: React.FC = () => {
                 )}
             </div>
             <SelectInput
-            title="Selecionar produtos"
-            onChange={(e) => handleProductSelect(e.target.value)}
-            onBlur={formik.handleBlur}
-            value = {formik.values.s}
-            placeholder=" "
-            name="products"
-            className="col-span-2"
-            options={products.map((product) => product.name)}
-            >
-
-            </SelectInput>
+              title="Selecionar produtos"
+              onChange={(e) => handleProductSelect(e.target.value)}
+              onBlur={formik.handleBlur}
+              value={formik.values.s}
+              placeholder=" "
+              name="products"
+              className="col-span-2"
+              options={products.map((product) => product.name)}
+            ></SelectInput>
 
             <div className="col-span-3">
               <h3 className="font-bold mb-2">Produtos Selecionados</h3>
@@ -167,27 +163,27 @@ export const Sales: React.FC = () => {
                     <div key={index} className="flex items-center mb-2">
                       <span className="mr-4">{item.product.name}</span>
                       <input
-                      placeholder="Quantidade"
+                        placeholder="Quantidade"
                         title="Quantidade"
                         type="number"
                         value={item.quantity}
                         className="w-1/5 border border-gray-300 rounded px-2 text-center py-1"
-                        onChange={(e) =>
+                        onChange={
+                          (e) =>
                             handleQuantityChange(index, Number(e.target.value)) // Update state with new value
                         }
                         name={`quantity-${index}`}
                       />
                       <button
-                      className="text-neutral-500 hover:text-purple-800 fas fa-trash ml-4"
-                      type="button"
-                      onClick={() => handleDelete(index)}
-                    ></button>
+                        className="text-neutral-500 hover:text-purple-800 fas fa-trash ml-4"
+                        type="button"
+                        onClick={() => handleDelete(index)}
+                      ></button>
                     </div>
                   ))}
                 </div>
               )}
             </div>
-
 
             <button
               type="submit"

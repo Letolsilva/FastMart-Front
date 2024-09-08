@@ -1,5 +1,5 @@
 import { Header } from "../../components/Header";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
@@ -39,6 +39,7 @@ const EditPage: React.FC = () => {
   const [employee, setEmployee] = useState<Employee | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -60,6 +61,7 @@ const EditPage: React.FC = () => {
       try {
         await updateEmployeeData(values);
         toast.success("Dados atualizados com sucesso!");
+        navigate("/lista-funcionarios");
       } catch (error) {
         toast.error("Erro ao atualizar os dados.");
       }
@@ -100,7 +102,6 @@ const EditPage: React.FC = () => {
     };
     fetchData();
   }, [employeeId]);
-
 
   if (loading) {
     return (

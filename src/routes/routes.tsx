@@ -13,11 +13,10 @@ import EditCompanyPage from "../pages/Company/Edit";
 import { Sales } from "../pages/Sales";
 import { CancelSale } from "../pages/CancelSale";
 
-
 export const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
       <Route path="/sales" element={<Sales />} />
       <Route path="/main" element={<MainPage />} />
       <Route path="/register" element={<Register />} />
@@ -26,19 +25,17 @@ export const AppRouter = () => {
       <Route path="/dados-funcionario/:id" element={<EmployeeDetails />} />
       <Route path="/edit/:id" element={<EditPage />} />
 
-      <Route path="/editar-produto/:id" element = {<EditProduct/>} />
+      <Route path="/editar-produto/:id" element={<EditProduct />} />
       <Route path="/lista-produtos" element={<ProductsList />} />
       <Route path="/dados-products/:id" element={<ProductDetails />} />
 
       <Route path="/edit/company" element={<EditCompanyPage />} />
-
 
       <Route path="/product/list" element={<ProductsList />} />
       <Route path="/dados-products/:id" element={<ProductDetails />} />
       <Route path="/cancel-sale" element={<CancelSale />} />
 
       <Route path="/edit/company" element={<EditCompanyPage />} />
-
     </Routes>
   );
 };

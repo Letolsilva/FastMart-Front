@@ -53,7 +53,7 @@ export async function PostLogout(
     );
     if (response.status === 200) {
       toast.success("Usuário deslogado com sucesso!");
-      navigate("/login");
+      navigate("/");
     }
     return response.data;
   } catch (error: unknown) {
