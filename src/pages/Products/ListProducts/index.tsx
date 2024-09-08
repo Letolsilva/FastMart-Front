@@ -154,7 +154,6 @@ const ProductsList: React.FC = () => {
           <h1 className="text-2xl font-bold text-purple-800 flex-shrink-0 w-[65rem]">
             Produtos Cadastrados
           </h1>
-
           <div className="flex space-x-4 flex-grow">
             <SearchBar
               searchTerm={searchTerm}
@@ -174,20 +173,24 @@ const ProductsList: React.FC = () => {
         {expiryError && <p className="text-red-500">{expiryError}</p>}
 
         {/* List of filtered products */}
-        {filteredProducts.length > 0 ? (
-          <ul className="space-y-2">
-            {filteredProducts.map((product) => (
-              <li
+        <ul className="space-y-2">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <Link
                 key={product.id}
-                onClick={() => handleProductClick(product.id)}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
+                to={`/dados-products/${product.id}`}
+                className="block"
               >
-                <span>{product.name}</span>
-                <div className="flex space-x-5">
-                  <button className="text-neutral-500 hover:text-purple-800">
-                    <i className="fas fa-edit"></i>
-                  </button>
-                  <button
+                <li className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                  {product.name}
+                  <div className="flex space-x-5">
+                    <Link
+                      to={`/editar-produto/${product.id}`}
+                      className="text-neutral-500 hover:text-purple-800"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </Link>
+                    <button
                     className="text-neutral-500 hover:text-purple-800"
                     onClick={() => {
                       const confirmed = window.confirm(
@@ -200,13 +203,14 @@ const ProductsList: React.FC = () => {
                   >
                     <i className="fas fa-trash"></i>
                   </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-center text-gray-500">Nenhum produto encontrado</p>
-        )}
+                  </div>
+                </li>
+              </Link>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">Nenhum produto encontrado</p>
+          )}
+        </ul>
 
         {/* Modal for expiring products */}
         {modalOpen && (

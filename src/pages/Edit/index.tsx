@@ -1,10 +1,6 @@
 import { Header } from "../../components/Header";
 import { useParams } from "react-router-dom";
 
-import {
-  fetchJustOneEmployee,
-  updateEmployeeData,
-} from "../../services/APIservices";
 import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";

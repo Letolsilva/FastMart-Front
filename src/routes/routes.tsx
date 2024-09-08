@@ -5,7 +5,6 @@ import { Login } from "../pages/Login";
 import EmployeesList from "../pages/ListEmployees";
 import EmployeeDetails from "../pages/DetailsEmployee";
 import EditPage from "../pages/Edit";
-import { RegisterProduct } from "../pages/RegisterProduct";
 import EditProduct from "../pages/Products/EditProducts";
 import { RegisterProduct } from "../pages/Products/RegisterProduct";
 import ProductsList from "../pages/Products/ListProducts";
