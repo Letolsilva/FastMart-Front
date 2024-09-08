@@ -2,9 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { FiUser } from "react-icons/fi";
 import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import purpleIcon from '/purple-icon.png';
-import { fetchEmployees, PostLogout } from "../../services/APIservices";
+import purpleIcon from "/purple-icon.png";
+import {
+  fetchEmployees,
+  PostLogout,
+  fetchCompanyIdByEmail,
+} from "../../services/ServicesEmployees";
 import { Employee } from "../../pages/ListEmployees";
+import { useAuthUser } from "react-auth-kit";
+import { toast } from "react-toastify";
 
 interface HeaderProps {
   showIcon?: boolean;
@@ -18,27 +24,40 @@ export const Header: React.FC<HeaderProps> = ({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [loggedInEmployee, setLoggedInEmployee] = useState<Employee | null>(null);
+  const [loggedInEmployee, setLoggedInEmployee] = useState<Employee | null>(
+    null
+  );
+  // const [companyId, setCompanyId] = useState<number | null>(null);
   const navigate = useNavigate();
+  const authUser = useAuthUser();
 
   useEffect(() => {
     const fetchLoggedInUser = async () => {
       try {
-        const employees = await fetchEmployees();
-        const loggedUser = employees.find(emp => emp.is_logged);
-        setLoggedInEmployee(loggedUser || null);
+        const user = authUser();
+        const userEmail = user?.email;
+
+        if (userEmail) {
+          const employees = await fetchEmployees();
+          const loggedUser = employees.find((emp) => emp.email === userEmail);
+
+          setLoggedInEmployee(loggedUser || null);
+        }
       } catch (error) {
-        console.error("Failed to fetch employees:", error);
+        console.error("Failed to fetch employees or company_id:", error);
       }
     };
 
-    fetchLoggedInUser();
-  }, []);
+    if (!loggedInEmployee) {
+      fetchLoggedInUser();
+    }
+  }, [loggedInEmployee]);
 
   const handleLogout = async () => {
+    const userEmail = authUser()?.email;
+    toast.success(`Usuário com email ${userEmail} deslogado.`);
     setRedirect(true);
-    if(loggedInEmployee){
-      console.log(loggedInEmployee.id);
+    if (loggedInEmployee) {
       await PostLogout(loggedInEmployee.id, navigate);
     }
   };
@@ -105,6 +124,12 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={handleLogout}
             >
               Sair
+            </button>
+            <button
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+              onClick={() => navigate("/edit/company")}
+            >
+              Editar empresa
             </button>
           </div>
         )}

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
-import { fetchEmployees } from "../../services/APIservices";
+import { fetchEmployees } from "../../services/ServicesEmployees";
 import { Employee } from "../ListEmployees";
 
 const EmployeeDetails: React.FC = () => {
@@ -54,6 +54,9 @@ const EmployeeDetails: React.FC = () => {
               <p className="text-gray-800">
                 <strong>Nome:</strong> {employee.name}
               </p>
+              <p className="text-gray-800">
+                <strong>Código:</strong> {employee.code}
+              </p>
               <p className="text-gray-700">
                 <strong>Email:</strong> {employee.email}
               </p>
@@ -69,6 +72,9 @@ const EmployeeDetails: React.FC = () => {
               </p>
               <p className="text-gray-700">
                 <strong>Educação:</strong> {employee.education}
+              </p>
+              <p className="text-gray-700">
+                <strong>ID Empresa:</strong> {employee.company_id}
               </p>
               <p className="text-gray-700">
                 <strong>Criado em:</strong>{" "}

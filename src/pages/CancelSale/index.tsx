@@ -1,32 +1,12 @@
-import { useEffect, useState } from "react";
-import "tailwindcss/tailwind.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import { Header } from "../../components/Header";
-import { Link } from "react-router-dom";
-import {
-  deleteFunction,
-  fetchEmployeesByCompany,
-} from "../../services/ServicesEmployees";
-import SearchBar from "../../components/SearchBar";
+import React, { useEffect, useState } from "react";
+import { deleteSale, fetchFinances, fetchProducts } from "../../services/ServicesProduct";
 import { useNavigate } from "react-router-dom";
+import { Header } from "../../components/Header";
+import SearchBar from "../../components/SearchBar";
 
-export interface Employee {
-  id: number;
-  name: string;
-  email: string;
-  code: number;
-  birthday_date: string;
-  cpf: string;
-  phone: string;
-  education: string;
-  company_id: number;
-  is_logged: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const EmployeesList: React.FC = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+export const CancelSale: React.FC = () => {
+  const [finances, setFinance] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,13 +29,10 @@ const EmployeesList: React.FC = () => {
   useEffect(() => {
     if (company_id === null) return;
 
-    const loadEmployees = async () => {
+    const loadFinances = async () => {
       try {
-        const data = await fetchEmployeesByCompany();
-        const sortedEmployees = data.sort((a: Employee, b: Employee) =>
-          a.name.localeCompare(b.name)
-        );
-        setEmployees(sortedEmployees);
+        const data = await fetchFinances();
+        setFinance(data);
       } catch (error) {
         setError("Erro ao buscar dados da API");
       } finally {
@@ -63,16 +40,37 @@ const EmployeesList: React.FC = () => {
       }
     };
 
-    loadEmployees();
+    const loadProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (error) {
+        setError("Erro ao buscar dados da API");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadFinances();
+    loadProducts();
   }, [company_id]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredEmployees = employees.filter((employee) =>
-    employee.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredFinances = finances
+    .map((finance) => {
+      const product = products.find((product) => product.id === finance.product_id);
+      return {
+        ...finance,
+        productName: product ? product.name : "Produto não encontrado",
+      };
+    })
+    .filter((finance) => {
+      const idString = String(finance.id); // Convert id to a string
+      return idString.includes(searchTerm || '');
+    });
 
   if (loading) {
     return <p>Carregando...</p>;
@@ -83,7 +81,7 @@ const EmployeesList: React.FC = () => {
   }
 
   const handleDelete = async (id: any) => {
-    await deleteFunction(id, navigate);
+    await deleteSale(id, navigate);
   };
 
   return (
@@ -92,39 +90,33 @@ const EmployeesList: React.FC = () => {
       <div className="border border-gray-300 p-10 rounded-lg shadow-md mt-5">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-purple-800">
-            Funcionários Cadastrados
+            Vendas Cadastradas
           </h1>
           <SearchBar
             searchTerm={searchTerm}
             onSearchChange={handleSearchChange}
-            placeholder="Pesquisar Funcionário"
+            placeholder="Pesquisar venda pelo ID"
           />
         </div>
         <ul className="space-y-2">
-          {filteredEmployees.length > 0 ? (
-            filteredEmployees.map((employee) => (
-              <Link
-                key={employee.id}
-                to={`/dados-funcionario/${employee.id}`}
-                className="block"
-              >
-                <li className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                  {employee.name}
+          {filteredFinances.length > 0 ? (
+            filteredFinances.map((finance) => (
+              finance.description === "Venda" ? (
+                <li key={finance.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                  <div>
+                    <p>ID Venda: {finance.id}</p>
+                    <p>Produto: {finance.productName}</p>
+                    <p>Valor: R${finance.value}</p>
+                  </div>
                   <div className="flex space-x-5">
-                    <Link
-                      to={`/edit/${employee.id}`}
-                      className="text-neutral-500 hover:text-purple-800"
-                    >
-                      <i className="fas fa-edit"></i>
-                    </Link>
                     <button
                       className="text-neutral-500 hover:text-purple-800"
                       onClick={() => {
                         const confirmed = window.confirm(
-                          `Você quer mesmo deletar ${employee.name}?`
+                          `Você quer mesmo deletar ${finance.id}?`
                         );
                         if (confirmed) {
-                          handleDelete(employee.id);
+                          handleDelete(finance.id);
                         }
                       }}
                     >
@@ -132,11 +124,11 @@ const EmployeesList: React.FC = () => {
                     </button>
                   </div>
                 </li>
-              </Link>
+              ) : null
             ))
           ) : (
             <p className="text-center text-purple-800">
-              Funcionário não encontrado
+              Venda não encontrada
             </p>
           )}
         </ul>
@@ -144,5 +136,3 @@ const EmployeesList: React.FC = () => {
     </div>
   );
 };
-
-export default EmployeesList;

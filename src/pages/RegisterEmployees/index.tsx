@@ -4,22 +4,32 @@ import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
 import { CPFInput } from "../../components/CPFInput";
-import { PostFunction } from "../../services/APIservices";
+import { CreateUser } from "../../services/ServicesEmployees";
 import { Header } from "../../components/Header";
+import { useNavigate } from "react-router-dom";
 
-const RegisterSchema = yup.object().shape({
+export const ValidationUserSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),
-  email: yup.string().required("Email é obrigatório"),
-  password: yup.string().required("Senha é obrigatória"),
+  email: yup.string().email("Email inválido").required("Email é obrigatório"),
   code: yup.string().required("Código é obrigatório"),
-  birthday_date: yup.string().required("Data de nascimento é obrigatório"),
-  phone: yup.string().required("Telefone é obrigatório"),
+  birthday_date: yup.string().required("Data de nascimento é obrigatória"),
+  phone: yup
+    .string()
+    .matches(/^[0-9]{10,11}$/, "Telefone deve ter 10 ou 11 dígitos")
+    .required("Telefone é obrigatório"),
+  password: yup.string().required("Senha é obrigatório"),
   education: yup.string().required("Educação é obrigatória"),
-  cpf: yup.string().required("CPF é obrigatório"),
+  cpf: yup
+    .string()
+    .matches(
+      /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+      "CPF deve estar no formato xxx.xxx.xxx-xx"
+    )
+    .required("CPF é obrigatório"),
 });
 
 export const Register: React.FC = () => {
-  
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -30,10 +40,17 @@ export const Register: React.FC = () => {
       cpf: "",
       phone: "",
       education: "",
+      company_id: "",
     },
-    validationSchema: RegisterSchema,
+    validationSchema: ValidationUserSchema,
     onSubmit: async (values) => {
-      await PostFunction(values);
+      try {
+        await CreateUser(values);
+        formik.resetForm();
+        navigate("/main");
+      } catch (error) {
+        console.error("Erro ao cadastrar:", error);
+      }
     },
   });
 
@@ -202,6 +219,26 @@ export const Register: React.FC = () => {
                 </p>
               )}
             </div>
+            <div className="col-span-2 -mt-6 flex justify-center">
+              <TextInput
+                title="ID da Empresa*"
+                placeholder="Digite o ID da empresa"
+                value={formik.values.company_id}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                name="company_id"
+                className={`w-full ${
+                  formik.errors.company_id && formik.touched.company_id
+                    ? "border-red-500"
+                    : ""
+                }`}
+              />
+            </div>
+            {formik.errors.company_id && formik.touched.company_id && (
+              <p className="col-span-2 text-red-500 text-xs -mt-3 mb-3 text-center">
+                {formik.errors.company_id}
+              </p>
+            )}
             <button
               type="submit"
               className="col-span-2 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary transition-colors"

@@ -2,13 +2,8 @@ import React from "react";
 
 interface NumberInputProps {
   title: string;
-<<<<<<< Updated upstream
-  placeholder: string;
-  value?: string;
-=======
   placeholder?: string;
   value?: number;
->>>>>>> Stashed changes
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   name?: string;

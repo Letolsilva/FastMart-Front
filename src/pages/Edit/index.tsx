@@ -1,26 +1,48 @@
 import { Header } from "../../components/Header";
 import { useParams } from "react-router-dom";
-<<<<<<< Updated upstream
+
 import {
   fetchJustOneEmployee,
   updateEmployeeData,
 } from "../../services/APIservices";
-=======
 import * as yup from "yup";
->>>>>>> Stashed changes
 import { TextInput } from "../../components/TextInput";
 import { DateInput } from "../../components/DateInput";
 import { CPFInput } from "../../components/CPFInput";
-import { updateEmployeeData } from "../../services/APIservices";
 import { useEffect, useState } from "react";
 import { Employee } from "../ListEmployees";
+import { toast } from "react-toastify";
+import { useFormik } from "formik";
+import {
+  fetchJustOneEmployee,
+  updateEmployeeData,
+} from "../../services/ServicesEmployees";
+
+export const ValidationUserEditSchema = yup.object().shape({
+  name: yup.string().required("Nome é obrigatório"),
+  email: yup.string().email("Email inválido").required("Email é obrigatório"),
+  code: yup.string().required("Código é obrigatório"),
+  birthday_date: yup.string().required("Data de nascimento é obrigatória"),
+  phone: yup
+    .string()
+    .matches(/^[0-9]{10,11}$/, "Telefone deve ter 10 ou 11 dígitos")
+    .required("Telefone é obrigatório"),
+  education: yup.string().required("Educação é obrigatória"),
+  cpf: yup
+    .string()
+    .matches(
+      /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+      "CPF deve estar no formato xxx.xxx.xxx-xx"
+    )
+    .required("CPF é obrigatório"),
+});
 
 const EditPage: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
-    const employeeId = id ? parseInt(id, 10) : NaN;
-    const [employee, setEmployee] = useState<Employee | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const employeeId = id ? parseInt(id, 10) : NaN;
+  const [employee, setEmployee] = useState<Employee | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -33,10 +55,11 @@ const EditPage: React.FC = () => {
       phone: "",
       education: "",
       is_logged: false,
+      company_id: -1,
       createdAt: "",
       updatedAt: "",
     },
-    validationSchema: ValidationUserSchema,
+    validationSchema: ValidationUserEditSchema,
     onSubmit: async (values: Employee) => {
       try {
         await updateEmployeeData(values);
@@ -67,6 +90,7 @@ const EditPage: React.FC = () => {
             cpf: fetchedEmployee.cpf,
             phone: fetchedEmployee.phone,
             education: fetchedEmployee.education,
+            company_id: fetchedEmployee.company_id,
             is_logged: fetchedEmployee.is_logged,
             createdAt: fetchedEmployee.createdAt,
             updatedAt: fetchedEmployee.updatedAt,
@@ -81,7 +105,8 @@ const EditPage: React.FC = () => {
     fetchData();
   }, [employeeId]);
 
-  if(loading) {
+
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <p>Carregando...</p>
@@ -89,13 +114,13 @@ const EditPage: React.FC = () => {
     );
   }
 
-    if (error) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <p className="text-red-500">{error}</p>
-            </div>
-        );
-    }
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-gray-100">
@@ -122,7 +147,6 @@ const EditPage: React.FC = () => {
               {formik.errors.name && formik.touched.name && (
                 <p className="text-red-500 text-xs">{formik.errors.name}</p>
               )}
-
               <TextInput
                 title="Email*"
                 placeholder=""
@@ -138,7 +162,6 @@ const EditPage: React.FC = () => {
               {formik.errors.email && formik.touched.email && (
                 <p className="text-red-500 text-xs">{formik.errors.email}</p>
               )}
-
               <DateInput
                 title="Data de Nascimento*"
                 placeholder=""
@@ -156,7 +179,6 @@ const EditPage: React.FC = () => {
                   {formik.errors.birthday_date}
                 </p>
               )}
-
               <CPFInput
                 title="CPF*"
                 placeholder=""
