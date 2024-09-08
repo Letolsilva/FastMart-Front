@@ -10,5 +10,5 @@ export const PrivateRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) 
     setIsAuth(!!token);
   }, [isAuthenticated]);
 
-  return isAuth ? <Outlet /> : <Navigate to="/login" />;
+  return isAuth ? <Outlet /> : <Navigate to="/" />;
 };

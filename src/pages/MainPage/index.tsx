@@ -12,7 +12,7 @@ const MainPage: React.FC = () => {
           <MenuMain nome={"Cadastrar Funcionário"} local="./register" />
           <MenuMain nome={"Listar Funcionários"} local="./lista-funcionarios" />
           <MenuMain nome={"Cadastrar Produto"} local="./registrar-produto" />
-          <MenuMain nome={"Listar Produtos"} local="/product/list" />
+          <MenuMain nome={"Listar Produtos"} local=" ./lista-produtos" />
           <MenuMain nome={"Registrar venda"} local="./sales" />
           <MenuMain nome={"Cancelar venda"} local="./cancel-sale" />
           <div className="col-span-1 sm:col-span-2 flex justify-center">

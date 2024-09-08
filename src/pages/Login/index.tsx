@@ -28,9 +28,11 @@ export const Login: React.FC = () => {
       if (response.status === 200) {
         const { token } = response.data;
         const { company_id } = response.data.user;
+        const { code } = response.data.user;
 
         localStorage.setItem("authToken", token);
         localStorage.setItem("company_id", company_id);
+        localStorage.setItem("code", code);
         toast.success("Usuário logado com sucesso!");
 
         signIn({
