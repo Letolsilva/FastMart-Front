@@ -1,3 +1,6 @@
+{
+  /* Cadastra os produtos */
+}
 import React from "react";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";

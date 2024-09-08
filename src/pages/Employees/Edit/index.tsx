@@ -1,10 +1,11 @@
-import { Header } from "../../components/Header";
-import { useNavigate, useParams } from "react-router-dom";
+{/* Edição dos dados do funcionário */}
 
+import { Header } from "../../../components/Header";
+import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
-import { TextInput } from "../../components/TextInput";
-import { DateInput } from "../../components/DateInput";
-import { CPFInput } from "../../components/CPFInput";
+import { TextInput } from "../../../components/TextInput";
+import { DateInput } from "../../../components/DateInput";
+import { CPFInput } from "../../../components/CPFInput";
 import { useEffect, useState } from "react";
 import { Employee } from "../ListEmployees";
 import { toast } from "react-toastify";
@@ -12,7 +13,7 @@ import { useFormik } from "formik";
 import {
   fetchJustOneEmployee,
   updateEmployeeData,
-} from "../../services/ServicesEmployees";
+} from "../../../services/ServicesEmployees";
 
 export const ValidationUserEditSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),

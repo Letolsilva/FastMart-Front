@@ -1,3 +1,6 @@
+{
+  /* Editar dos produtos */
+}
 import { Header } from "../../../components/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";

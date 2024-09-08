@@ -1,15 +1,18 @@
+{
+  /* Cadastra funcionário */
+}
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { TextInput } from "../../components/TextInput";
-import { DateInput } from "../../components/DateInput";
-import { CPFInput } from "../../components/CPFInput";
-import { CreateUser } from "../../services/ServicesEmployees";
-import { Header } from "../../components/Header";
+import { TextInput } from "../../../components/TextInput";
+import { DateInput } from "../../../components/DateInput";
+import { CPFInput } from "../../../components/CPFInput";
+import { CreateUser } from "../../../services/ServicesEmployees";
+import { Header } from "../../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getProfession } from "../../pages/MainPage";
-import { SelectInput } from "../../components/SelectInput";
+import { getProfession } from "../../MainPage";
+import { SelectInput } from "../../../components/SelectInput";
 
 export const ValidationUserSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),

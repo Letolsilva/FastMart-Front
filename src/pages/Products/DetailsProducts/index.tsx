@@ -1,3 +1,6 @@
+{
+  /* Detalhes dos produtos */
+}
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { TypeProduct } from "../ListProducts";

@@ -1,8 +1,15 @@
+{
+  /* Cancela uma venda */
+}
 import React, { useEffect, useState } from "react";
-import { deleteSale, fetchFinances, fetchProducts } from "../../services/ServicesProduct";
+import {
+  deleteSale,
+  fetchFinances,
+  fetchProducts,
+} from "../../../services/ServicesProduct";
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../components/Header";
-import SearchBar from "../../components/SearchBar";
+import { Header } from "../../../components/Header";
+import SearchBar from "../../../components/SearchBar";
 
 export const CancelSale: React.FC = () => {
   const [finances, setFinance] = useState<any[]>([]);
@@ -61,15 +68,17 @@ export const CancelSale: React.FC = () => {
 
   const filteredFinances = finances
     .map((finance) => {
-      const product = products.find((product) => product.id === finance.product_id);
+      const product = products.find(
+        (product) => product.id === finance.product_id
+      );
       return {
         ...finance,
         productName: product ? product.name : "Produto não encontrado",
       };
     })
     .filter((finance) => {
-      const idString = String(finance.id); // Convert id to a string
-      return idString.includes(searchTerm || '');
+      const idString = String(finance.id);
+      return idString.includes(searchTerm || "");
     });
 
   if (loading) {
@@ -100,9 +109,12 @@ export const CancelSale: React.FC = () => {
         </div>
         <ul className="space-y-2">
           {filteredFinances.length > 0 ? (
-            filteredFinances.map((finance) => (
+            filteredFinances.map((finance) =>
               finance.description === "Venda" ? (
-                <li key={finance.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <li
+                  key={finance.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                >
                   <div>
                     <p>ID Venda: {finance.id}</p>
                     <p>Produto: {finance.productName}</p>
@@ -125,11 +137,9 @@ export const CancelSale: React.FC = () => {
                   </div>
                 </li>
               ) : null
-            ))
+            )
           ) : (
-            <p className="text-center text-purple-800">
-              Venda não encontrada
-            </p>
+            <p className="text-center text-purple-800">Venda não encontrada</p>
           )}
         </ul>
       </div>

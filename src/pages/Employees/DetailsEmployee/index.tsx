@@ -1,7 +1,10 @@
+{
+  /* Detalhes do funcioário - Na listagem é possível clicar no funcioário e vê as informações sobre ele */
+}
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Header } from "../../components/Header";
-import { fetchEmployees } from "../../services/ServicesEmployees";
+import { Header } from "../../../components/Header";
+import { fetchEmployees } from "../../../services/ServicesEmployees";
 import { Employee } from "../ListEmployees";
 
 const EmployeeDetails: React.FC = () => {

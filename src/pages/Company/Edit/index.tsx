@@ -1,3 +1,5 @@
+{/* Edição de empresa - Como o cliente já receberá o software com a empresa cadastrada, ele poderá apenas alterar os dados existentes */}
+
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
@@ -9,6 +11,7 @@ import {
   updateCompanyData,
 } from "../../../services/ServiceCompany";
 
+//valida os dados
 const ValidationCompanySchema = yup.object().shape({
   comp_name: yup.string().required("Nome da empresa é obrigatório"),
   comp_cnpj: yup

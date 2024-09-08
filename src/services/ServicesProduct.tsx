@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { TypeProduct_lucas } from "../pages/Products/EditProducts";
 
 const API_URL = "http://localhost:3333";
-
+//Endpoints dos produtos e financeiro
 export async function registerProduct(data: any) {
   try {
     const company_id = localStorage.getItem("company_id");
@@ -77,7 +77,7 @@ export async function fetchJustOneProduct(
         },
       });
     const product = response.data.products.find((x) => x.id === id);
-    return product || null; // Retorna o produto encontrado ou null se não encontrado
+    return product || null;
   } catch (error) {
     console.error("Erro ao buscar o Produto:", error);
     return null;

@@ -1,13 +1,16 @@
+{
+  /* Registra uma venda */
+}
 import React from "react";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { NumberInput } from "../../components/NumberInput";
-import { SelectInput } from "../../components/SelectInput";
-import { Header } from "../../components/Header";
-import { fetchProducts } from "../../services/ServicesProduct";
-import { TypeProduct } from "../Products/ListProducts";
-import { recordSale } from "../../services/ServicesProduct";
+import { NumberInput } from "../../../components/NumberInput";
+import { SelectInput } from "../../../components/SelectInput";
+import { Header } from "../../../components/Header";
+import { fetchProducts } from "../../../services/ServicesProduct";
+import { TypeProduct } from "../../Products/ListProducts";
+import { recordSale } from "../../../services/ServicesProduct";
 import { useNavigate } from "react-router-dom";
 
 export const ValidationProdcutSchema = yup.object().shape({
@@ -27,7 +30,7 @@ export const Sales: React.FC = () => {
     const loadProducts = async () => {
       try {
         const fetchedProducts = await fetchProducts();
-        setProducts(fetchedProducts); // Armazena os produtos no estado
+        setProducts(fetchedProducts);
       } catch (error) {
         setError("Erro ao buscar dados da API");
       }
@@ -55,7 +58,6 @@ export const Sales: React.FC = () => {
     const updatedProducts = selectedProducts.filter((_, i) => i !== index);
     setSelectedProducts(updatedProducts);
   };
-
 
   const formik = useFormik({
     initialValues: {

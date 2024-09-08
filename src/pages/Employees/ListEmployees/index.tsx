@@ -1,13 +1,14 @@
+{/* Lista de funcionários */}
 import { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { Header } from "../../components/Header";
+import { Header } from "../../../components/Header";
 import { Link } from "react-router-dom";
 import {
   deleteFunction,
   fetchEmployeesByCompany,
-} from "../../services/ServicesEmployees";
-import SearchBar from "../../components/SearchBar";
+} from "../../../services/ServicesEmployees";
+import SearchBar from "../../../components/SearchBar";
 import { useNavigate } from "react-router-dom";
 
 export interface Employee {

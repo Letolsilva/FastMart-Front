@@ -4,7 +4,7 @@ import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import purpleIcon from "/purple-icon.png";
 import { fetchEmployees, PostLogout } from "../../services/ServicesEmployees";
-import { Employee } from "../../pages/ListEmployees";
+import { Employee } from "../../pages/Employees/ListEmployees";
 import { useAuthUser } from "react-auth-kit";
 import { toast } from "react-toastify";
 import { getProfession } from "../../pages/MainPage";

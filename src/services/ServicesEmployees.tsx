@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
-import { Employee } from "../pages/ListEmployees";
+import { Employee } from "../pages/Employees/ListEmployees";
 const API_URL = "http://localhost:3333";
 import { useNavigate } from "react-router-dom";
 
@@ -52,9 +52,9 @@ export async function PostLogout(
       }
     );
     if (response.status === 200) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('company_id');
-      localStorage.removeItem('code');
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("company_id");
+      localStorage.removeItem("code");
 
       toast.success("Usuário deslogado com sucesso!");
       navigate("/");

@@ -1,3 +1,6 @@
+{
+  /* Listagem dos produtos */
+}
 import { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -135,10 +138,6 @@ const ProductsList: React.FC = () => {
       </div>
     );
   }
-
-  const handleProductClick = (id: number) => {
-    navigate(`/dados-products/${id}`);
-  };
 
   const handleDelete = async (code: string) => {
     await deleteProduct(code, navigate);
