@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { forgotPassword } from "../../services/ServicesEmployees";
 
-const API_URL = "http://localhost:3334";
+const API_URL = "http://localhost:3333";
 
 const LoginSchema = yup.object().shape({
   email: yup.string().required("E-mail é obrigatório"),
@@ -17,7 +17,7 @@ const LoginSchema = yup.object().shape({
 
 const ForgotPasswordSchema = yup.object().shape({
   cpf: yup.string().required("CPF é obrigatório"),
-  birthDate: yup.string().required("Data de nascimento é obrigatória"),
+  birthday_date: yup.string().required("Data de nascimento é obrigatória"),
   newPassword: yup.string().required("Nova senha é obrigatória"),
 });
 
@@ -72,17 +72,14 @@ export const Login: React.FC = () => {
 
   const handleForgotPassword = async (values: {
     cpf: string;
-    birthDate: string;
+    birthday_date: string;
     newPassword: string;
   }) => {
-    const company_id = 1;
-
     try {
       await forgotPassword(
         values.cpf,
-        values.birthDate,
+        values.birthday_date,
         values.newPassword,
-        company_id,
         navigate
       );
     } catch (error) {
@@ -111,7 +108,7 @@ export const Login: React.FC = () => {
   const forgotPasswordFormik = useFormik({
     initialValues: {
       cpf: "",
-      birthDate: "",
+      birthday_date: "",
       newPassword: "",
     },
     validationSchema: ForgotPasswordSchema,
@@ -215,21 +212,21 @@ export const Login: React.FC = () => {
                 title="Data de Nascimento"
                 placeholder="Digite sua data de nascimento"
                 type="date"
-                value={forgotPasswordFormik.values.birthDate}
+                value={forgotPasswordFormik.values.birthday_date}
                 onChange={forgotPasswordFormik.handleChange}
                 onBlur={forgotPasswordFormik.handleBlur}
-                name="birthDate"
+                name="birthday_date"
                 className={
-                  forgotPasswordFormik.errors.birthDate &&
-                  forgotPasswordFormik.touched.birthDate
+                  forgotPasswordFormik.errors.birthday_date &&
+                  forgotPasswordFormik.touched.birthday_date
                     ? "border-red-500 w-96"
                     : "w-96"
                 }
               />
-              {forgotPasswordFormik.errors.birthDate &&
-                forgotPasswordFormik.touched.birthDate && (
+              {forgotPasswordFormik.errors.birthday_date &&
+                forgotPasswordFormik.touched.birthday_date && (
                   <p className="text-red-500 text-xs">
-                    {forgotPasswordFormik.errors.birthDate}
+                    {forgotPasswordFormik.errors.birthday_date}
                   </p>
                 )}
               <TextInput

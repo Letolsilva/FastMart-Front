@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Employee } from "../pages/ListEmployees";
-const API_URL = "http://localhost:3334";
+const API_URL = "http://localhost:3333";
 import { useNavigate } from "react-router-dom";
 
 //Login
@@ -238,12 +238,11 @@ export async function forgotPassword(
   cpf: string,
   birthday_date: string,
   newPassword: string,
-  company_id: number,
   navigate: ReturnType<typeof useNavigate>
 ) {
   try {
     const response: AxiosResponse<{ status: number; message: string }> =
-      await axios.post(`${API_URL}/users/forgot/${company_id}`, {
+      await axios.post(`${API_URL}/users/forgot`, {
         cpf,
         birthday_date,
         newPassword,

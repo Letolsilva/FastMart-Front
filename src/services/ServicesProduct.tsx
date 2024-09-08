@@ -5,7 +5,7 @@ import { TypeProduct } from "../pages/Products/ListProducts";
 import { useNavigate } from "react-router-dom";
 import { TypeProduct_lucas } from "../pages/Products/EditProducts";
 
-const API_URL = "http://localhost:3334";
+const API_URL = "http://localhost:3333";
 
 export async function registerProduct(data: any) {
   try {
