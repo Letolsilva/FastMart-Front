@@ -52,6 +52,8 @@ export async function PostLogout(
       }
     );
     if (response.status === 200) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('company_id');
       toast.success("Usuário deslogado com sucesso!");
       navigate("/login");
     }
