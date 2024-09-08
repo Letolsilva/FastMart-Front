@@ -15,11 +15,17 @@ import { Sales } from "../pages/Sales";
 import { CancelSale } from "../pages/CancelSale";
 import { PrivateRoute } from "../components/PrivateRoute";
 
+
+const isAuthenticated = () => {
+  // Função que verifica se o usuário está autenticado
+  return localStorage.getItem("authToken") ? true : false;
+};
+
 export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-
+      
        {/* Rota protegida da Main */}
        <Route element={<PrivateRoute requiredRoles={["Administrador","Caixa","Estoquista","RH","Marketing"]} />}>
         <Route path="/main" element={<MainPage />} />

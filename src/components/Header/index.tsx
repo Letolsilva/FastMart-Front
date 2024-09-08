@@ -3,14 +3,11 @@ import { FiUser } from "react-icons/fi";
 import { BiChevronLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import purpleIcon from "/purple-icon.png";
-import {
-  fetchEmployees,
-  PostLogout,
-  fetchCompanyIdByEmail,
-} from "../../services/ServicesEmployees";
+import { fetchEmployees, PostLogout } from "../../services/ServicesEmployees";
 import { Employee } from "../../pages/ListEmployees";
 import { useAuthUser } from "react-auth-kit";
 import { toast } from "react-toastify";
+import { getProfession } from "../../pages/MainPage";
 
 interface HeaderProps {
   showIcon?: boolean;
@@ -27,9 +24,17 @@ export const Header: React.FC<HeaderProps> = ({
   const [loggedInEmployee, setLoggedInEmployee] = useState<Employee | null>(
     null
   );
-  // const [companyId, setCompanyId] = useState<number | null>(null);
+  const [profession, setProfession] = useState<string>("");
+  const [code, setCode] = useState<number | null>(null);
   const navigate = useNavigate();
   const authUser = useAuthUser();
+
+  useEffect(() => {
+    const storedCode = Number(localStorage.getItem("code"));
+    setCode(storedCode);
+    const userProfession = getProfession(storedCode);
+    setProfession(userProfession);
+  }, []);
 
   useEffect(() => {
     const fetchLoggedInUser = async () => {
@@ -126,7 +131,9 @@ export const Header: React.FC<HeaderProps> = ({
               Sair
             </button>
             <button
-              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+              className={`block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 ${
+                profession !== "Administrador" ? "hidden" : ""
+              }`}
               onClick={() => navigate("/edit/company")}
             >
               Editar empresa

@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { TypeProduct } from "../pages/Products/ListProducts";
-import { TypeProduct_lucas } from "../pages/Products/EditProducts";
-import { Employee } from "../pages/ListEmployees";
-import { useNavigate } from "react-router-dom";
 
-const API_URL = "http://localhost:3334";
+import { useNavigate } from "react-router-dom";
+import { TypeProduct_lucas } from "../pages/Products/EditProducts";
+
+const API_URL = "http://localhost:3333";
 
 export async function registerProduct(data: any) {
   try {
@@ -65,22 +65,20 @@ export async function fetchFinances(): Promise<TypeProduct[]> {
 }
 
 export async function fetchJustOneProduct(
-  id: number,
+  id: number
 ): Promise<TypeProduct_lucas | null> {
   try {
     const token = localStorage.getItem("authToken");
     const id_company = localStorage.getItem("company_id");
-    const response: AxiosResponse<{ products: TypeProduct_lucas[] }> = await axios.get(
-      `${API_URL}/products/${id_company}`, {
+    const response: AxiosResponse<{ products: TypeProduct_lucas[] }> =
+      await axios.get(`${API_URL}/products/${id_company}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
+      });
     const product = response.data.products.find((x) => x.id === id);
-    return product || null;  // Retorna o produto encontrado ou null se não encontrado
-  }
-  catch (error) {
+    return product || null; // Retorna o produto encontrado ou null se não encontrado
+  } catch (error) {
     console.error("Erro ao buscar o Produto:", error);
     return null;
   }
@@ -122,14 +120,16 @@ export async function fetchSales(): Promise<any[]> {
       throw new Error("Token de autenticação não encontrado");
     }
 
-    const response: AxiosResponse<{ finances: any[] }> =
-      await axios.get(`${API_URL}/finances/${company_id}`, {
+    const response: AxiosResponse<{ finances: any[] }> = await axios.get(
+      `${API_URL}/finances/${company_id}`,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      console.log(response.data.finances);
-      
+      }
+    );
+    console.log(response.data.finances);
+
     if (Array.isArray(response.data.finances)) {
       return response.data.finances;
     } else {
@@ -141,16 +141,17 @@ export async function fetchSales(): Promise<any[]> {
   }
 }
 
-
 export async function deleteProduct(
   code: any,
 
-  navigate: ReturnType<typeof useNavigate>){
-    try {
-      const token = localStorage.getItem("authToken");
-      const company_id = localStorage.getItem("company_id");
-      const response = await axios.delete(`${API_URL}/products/${code}/${company_id}`,{
-
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    const token = localStorage.getItem("authToken");
+    const company_id = localStorage.getItem("company_id");
+    const response = await axios.delete(
+      `${API_URL}/products/${code}/${company_id}`,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -158,7 +159,7 @@ export async function deleteProduct(
     );
     if (response.status === 200) {
       toast.success("Produto deletado com sucesso!");
-      navigate("/product/list");
+      navigate("/lista-produtos");
     }
     return response.data;
   } catch (error: unknown) {
@@ -170,38 +171,44 @@ export async function deleteProduct(
           toast.error("Erro interno!");
         }
       }
-      navigate("/product/list");
+      navigate("/lista-produtos");
     }
-    
+
     throw error;
   }
 }
 
-
-export async function recordSale(data: any, navigate: ReturnType<typeof useNavigate>){
-  try{
+export async function recordSale(
+  data: any,
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
     const token = localStorage.getItem("authToken");
     const company_id = localStorage.getItem("company_id");
-    const response = await axios.post(`${API_URL}/finances/sales/${company_id}`, data,{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if(response.status === 201){
+    const response = await axios.post(
+      `${API_URL}/finances/sales/${company_id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status === 201) {
       toast.success("Venda realizada com sucesso!");
       navigate("/main");
     }
     return response.data;
-  } catch(error: unknown){
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 404) {
           toast.error("Produto não encontrado!");
         } else if (error.response.status === 500) {
           toast.error("Erro interno!");
-        }
-        else if(error.response.status === 400){
-          const errorMessage = error.response.data.message || "Erro na solicitação!";
+        } else if (error.response.status === 400) {
+          const errorMessage =
+            error.response.data.message || "Erro na solicitação!";
           toast.error(errorMessage);
         }
       }
@@ -214,20 +221,21 @@ export async function recordSale(data: any, navigate: ReturnType<typeof useNavig
 export async function deleteSale(
   id: any,
 
-  navigate: ReturnType<typeof useNavigate>){
-    try {
-      const token = localStorage.getItem("authToken");
-      const company_id = localStorage.getItem("company_id");
-      const response = await axios.delete(`${API_URL}/finances/cancel-sale/${company_id}`,{
-
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    const token = localStorage.getItem("authToken");
+    const company_id = localStorage.getItem("company_id");
+    const response = await axios.delete(
+      `${API_URL}/finances/cancel-sale/${company_id}`,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         data: {
-          saleId: id
-        }
+          saleId: id,
+        },
       }
-
     );
     toast.success("Venda cancelada com sucesso!");
     navigate("/main");
@@ -243,11 +251,10 @@ export async function deleteSale(
       }
       navigate("/cancel-sale");
     }
-    
+
     throw error;
   }
 }
-
 
 // Função para buscar produtos que estão prestes a vencer
 export const getExpiringProducts = async (days: number) => {
@@ -300,4 +307,4 @@ export async function updateProductData(data: TypeProduct_lucas) {
     }
     throw error;
   }
-};
+}

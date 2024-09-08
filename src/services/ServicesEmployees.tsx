@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Employee } from "../pages/ListEmployees";
-const API_URL = "http://localhost:3334";
+const API_URL = "http://localhost:3333";
 import { useNavigate } from "react-router-dom";
 
 //Login
@@ -55,6 +55,7 @@ export async function PostLogout(
       localStorage.removeItem('authToken');
       localStorage.removeItem('company_id');
       localStorage.removeItem('code');
+
       toast.success("Usuário deslogado com sucesso!");
       navigate("/");
     }
@@ -216,7 +217,7 @@ export async function deleteFunction(
     );
     if (response.status === 200) {
       toast.success("Usuário deletado com sucesso!");
-      navigate("/main");
+      navigate("/lista-funcionarios");
     }
     return response.data;
   } catch (error: unknown) {
@@ -231,6 +232,43 @@ export async function deleteFunction(
       navigate("/lista-funcionarios");
     }
 
+    throw error;
+  }
+}
+
+export async function forgotPassword(
+  cpf: string,
+  birthday_date: string,
+  newPassword: string,
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    const response: AxiosResponse<{ status: number; message: string }> =
+      await axios.post(`${API_URL}/users/forgot`, {
+        cpf,
+        birthday_date,
+        newPassword,
+      });
+
+    if (response.status === 200) {
+      toast.success("Senha redefinida com sucesso!");
+      navigate("/");
+    }
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          toast.error("Dados de entrada incorretos!");
+        } else if (error.response.status === 404) {
+          toast.error("Usuário não encontrado!");
+        } else if (error.response.status === 500) {
+          toast.error("Erro ao redefinir a senha!");
+        }
+      } else {
+        toast.error("Erro ao buscar dados da API");
+      }
+    }
     throw error;
   }
 }
