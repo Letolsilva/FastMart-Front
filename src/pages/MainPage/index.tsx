@@ -27,6 +27,7 @@ const MainPage: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-gray-200 bg-opacity-50">
       <Header />
       <main className="flex-grow flex items-center justify-center p-12">
+
         {profession === "Caixa" ? (
           <div className="flex justify-center w-full max-w-md">
             <MenuMain nome={"Registrar venda"} local="./sales" />
