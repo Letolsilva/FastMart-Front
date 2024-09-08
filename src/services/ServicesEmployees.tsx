@@ -52,8 +52,8 @@ export async function PostLogout(
       }
     );
     if (response.status === 200) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('company_id');
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("company_id");
       toast.success("Usuário deslogado com sucesso!");
       navigate("/");
     }
@@ -215,7 +215,7 @@ export async function deleteFunction(
     );
     if (response.status === 200) {
       toast.success("Usuário deletado com sucesso!");
-      navigate("/main");
+      navigate("/lista-funcionarios");
     }
     return response.data;
   } catch (error: unknown) {

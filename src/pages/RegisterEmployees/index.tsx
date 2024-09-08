@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { TextInput } from "../../components/TextInput";
@@ -8,6 +8,8 @@ import { CreateUser } from "../../services/ServicesEmployees";
 import { Header } from "../../components/Header";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getProfession } from "../../pages/MainPage";
+import { SelectInput } from "../../components/SelectInput";
 
 export const ValidationUserSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),
@@ -31,6 +33,8 @@ export const ValidationUserSchema = yup.object().shape({
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
+  const [profession, setProfession] = useState<string>("");
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -55,6 +59,12 @@ export const Register: React.FC = () => {
       }
     },
   });
+
+  const handleCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCode = e.target.value;
+    formik.handleChange(e); // Manter o controle do Formik
+    setProfession(getProfession(Number(selectedCode))); // Atualizar a profissão
+  };
 
   return (
     <div>
@@ -126,13 +136,11 @@ export const Register: React.FC = () => {
                   {formik.errors.password}
                 </p>
               )}
-
-              <TextInput
+              <SelectInput
                 title="Código do Funcionário*"
                 placeholder="Código do funcionário"
-                type="codigo"
                 value={formik.values.code}
-                onChange={formik.handleChange}
+                onChange={handleCodeChange}
                 onBlur={formik.handleBlur}
                 name="code"
                 className={
@@ -140,10 +148,16 @@ export const Register: React.FC = () => {
                     ? "border-red-500"
                     : ""
                 }
+                options={[0, 1, 2, 3, 4]}
               />
               {formik.errors.code && formik.touched.code && (
                 <p className="text-red-500 text-xs -mt-3 mb-3">
                   {formik.errors.code}
+                </p>
+              )}
+              {profession && (
+                <p className="text-sm text-purple-700">
+                  Profissão: {profession}
                 </p>
               )}
             </div>

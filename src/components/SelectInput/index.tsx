@@ -8,7 +8,7 @@ interface SelectInputProps {
   placeholder?: string;
   name?: string;
   className?: string;
-  options: string[];
+  options: string[] | number[];
 }
 
 export const SelectInput: React.FC<SelectInputProps> = ({

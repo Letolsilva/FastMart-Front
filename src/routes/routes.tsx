@@ -14,17 +14,16 @@ import { Sales } from "../pages/Sales";
 import { CancelSale } from "../pages/CancelSale";
 import { PrivateRoute } from "../components/PrivateRoute";
 
-
 const isAuthenticated = () => {
   // Função que verifica se o usuário está autenticado
-  return localStorage.getItem('authToken') ? true : false;
+  return localStorage.getItem("authToken") ? true : false;
 };
 
 export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route element={<PrivateRoute isAuthenticated={isAuthenticated()}/>}>
+      <Route element={<PrivateRoute isAuthenticated={isAuthenticated()} />}>
         <Route path="/main" element={<MainPage />} />
         <Route path="/sales" element={<Sales />} />
         <Route path="/register" element={<Register />} />
@@ -32,7 +31,7 @@ export const AppRouter = () => {
         <Route path="/lista-funcionarios" element={<EmployeesList />} />
         <Route path="/dados-funcionario/:id" element={<EmployeeDetails />} />
         <Route path="/edit/:id" element={<EditPage />} />
-        <Route path="/editar-produto/:id" element = {<EditProduct/>} />
+        <Route path="/editar-produto/:id" element={<EditProduct />} />
         <Route path="/lista-produtos" element={<ProductsList />} />
         <Route path="/dados-products/:id" element={<ProductDetails />} />
         <Route path="/edit/company" element={<EditCompanyPage />} />

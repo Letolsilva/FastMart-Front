@@ -69,7 +69,7 @@ const MainPage: React.FC = () => {
             {/* Listar Produtos - Estoquista e Administrador */}
             <MenuMain
               nome={"Listar Produtos"}
-              local="/product/list"
+              local="/lista-produtos"
               className={
                 profession !== "Estoquista" && profession !== "Administrador"
                   ? "hidden"
