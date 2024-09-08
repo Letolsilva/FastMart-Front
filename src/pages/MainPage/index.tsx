@@ -12,8 +12,19 @@ const MainPage: React.FC = () => {
           <MenuMain nome={"Cadastrar Funcionário"} local="./register"></MenuMain>
           <MenuMain nome={"Listar Funcionários"} local="./lista-funcionarios"></MenuMain>
           <MenuMain nome={"Atualizar Empresa"} local="/"></MenuMain>
-          <MenuMain nome={"Cadastrar Produto"} local="/"></MenuMain>
+<<<<<<< Updated upstream
+          <MenuMain nome={"Cadastrar Produto"} local="./registrar-produto"></MenuMain>
           <MenuMain nome={"Armazenamento do Produto"} local="/"></MenuMain>
+=======
+          <MenuMain
+            nome={"Cadastrar Produto"}
+            local="./registrar-produto"
+          ></MenuMain>
+          <MenuMain
+            nome={"Listar Produtos"}
+            local="lista-produtos"
+          ></MenuMain>
+>>>>>>> Stashed changes
           <MenuMain nome={"Atualizar Produto"} local="/"></MenuMain>
           <MenuMain nome={"Remover Produto"} local="/"></MenuMain>
           <MenuMain nome={"Registro Financeiro"} local="/"></MenuMain>
