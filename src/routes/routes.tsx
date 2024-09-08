@@ -17,6 +17,7 @@ import EditCompanyPage from "../pages/Company/Edit";
 import { Sales } from "../pages/Finances/Sales";
 import { CancelSale } from "../pages/Finances/CancelSale";
 import { PrivateRoute } from "../components/PrivateRoute";
+import { Analysis } from "../pages/Finances/DataAnalysis";
 
 export const AppRouter = () => {
   return (
@@ -81,6 +82,7 @@ export const AppRouter = () => {
       </Route>
 
       <Route path="/acesso-negado" element={<NegatedAcess />} />
+      <Route path="/analise-dados" element={<Analysis />} />
     </Routes>
   );
 };

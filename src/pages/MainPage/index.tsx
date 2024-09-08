@@ -97,16 +97,17 @@ const MainPage: React.FC = () => {
 
             {/* Análise de Dados - Apenas Administrador ou Marketing */}
             <div className="col-span-1 sm:col-span-2 flex justify-center">
-              <MenuMain
-                nome={"Análise de Dados"}
-                local="/"
-                className={
-                  profession !== "Marketing" && profession !== "Administrador"
-                    ? "hidden"
-                    : ""
-                }
-              />
+                <MenuMain
+                  nome={"Análise de Dados"}
+                  local="./analise-dados"
+                  className={
+                    profession !== "Marketing" && profession !== "Administrador"
+                      ? "hidden"
+                      : ""
+                  }
+                />
             </div>
+
           </div>
         )}
       </main>
