@@ -233,3 +233,41 @@ export async function deleteFunction(
     throw error;
   }
 }
+
+export async function forgotPassword(
+  cpf: string,
+  birthday_date: string,
+  newPassword: string,
+  company_id: number,
+  navigate: ReturnType<typeof useNavigate>
+) {
+  try {
+    const response: AxiosResponse<{ status: number; message: string }> =
+      await axios.post(`${API_URL}/users/forgot/${company_id}`, {
+        cpf,
+        birthday_date,
+        newPassword,
+      });
+
+    if (response.status === 200) {
+      toast.success("Senha redefinida com sucesso!");
+      navigate("/");
+    }
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          toast.error("Dados de entrada incorretos!");
+        } else if (error.response.status === 404) {
+          toast.error("Usuário não encontrado!");
+        } else if (error.response.status === 500) {
+          toast.error("Erro ao redefinir a senha!");
+        }
+      } else {
+        toast.error("Erro ao buscar dados da API");
+      }
+    }
+    throw error;
+  }
+}
