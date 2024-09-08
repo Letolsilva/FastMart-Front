@@ -5,6 +5,7 @@ import { Login } from "../pages/Login";
 import EmployeesList from "../pages/ListEmployees";
 import EmployeeDetails from "../pages/DetailsEmployee";
 import EditPage from "../pages/Edit";
+import NegatedAcess from "../pages/NegatedAcess";
 import EditProduct from "../pages/Products/EditProducts";
 import { RegisterProduct } from "../pages/Products/RegisterProduct";
 import ProductsList from "../pages/Products/ListProducts";
@@ -14,30 +15,50 @@ import { Sales } from "../pages/Sales";
 import { CancelSale } from "../pages/CancelSale";
 import { PrivateRoute } from "../components/PrivateRoute";
 
-
-const isAuthenticated = () => {
-  // Função que verifica se o usuário está autenticado
-  return localStorage.getItem('authToken') ? true : false;
-};
-
 export const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route element={<PrivateRoute isAuthenticated={isAuthenticated()}/>}>
+
+       {/* Rota protegida da Main */}
+       <Route element={<PrivateRoute requiredRoles={["Administrador","Caixa","Estoquista","RH","Marketing"]} />}>
         <Route path="/main" element={<MainPage />} />
+      </Route>
+
+      {/* Rota protegida para Registrar Vendas */}
+      <Route element={<PrivateRoute requiredRoles={["Administrador","Caixa"]} />}>
         <Route path="/sales" element={<Sales />} />
-        <Route path="/register" element={<Register />} />
+      </Route>
+
+      {/* Rota protegida para Registrar, Listar e Editar Produto */}
+       <Route element={<PrivateRoute requiredRoles={["Administrador","Estoquista"]} />}>
         <Route path="/registrar-produto" element={<RegisterProduct />} />
+        <Route path="/lista-produtos" element={<ProductsList />} />
+        <Route path="/dados-products/:id" element={<ProductDetails />} />
+        <Route path="/editar-produto/:id" element={<EditProduct />} />
+      </Route>
+
+      {/* Rota protegida para Registrar, Listar e Editar Funcionario */}
+      <Route element={<PrivateRoute requiredRoles={["Administrador","RH"]} />}>
+        <Route path="/register" element={<Register />} />
         <Route path="/lista-funcionarios" element={<EmployeesList />} />
         <Route path="/dados-funcionario/:id" element={<EmployeeDetails />} />
         <Route path="/edit/:id" element={<EditPage />} />
-        <Route path="/editar-produto/:id" element = {<EditProduct/>} />
-        <Route path="/lista-produtos" element={<ProductsList />} />
-        <Route path="/dados-products/:id" element={<ProductDetails />} />
+      </Route>
+
+      {/* Rota protegida para Analise de dados */}
+      <Route element={<PrivateRoute requiredRoles={["Administrador","Marketing"]} />}>
+        {/*colocar aqui*/} 
+      </Route>
+
+      {/* Rota protegida para Administrador */}
+      <Route element={<PrivateRoute requiredRoles={["Administrador"]} />}>
         <Route path="/edit/company" element={<EditCompanyPage />} />
         <Route path="/cancel-sale" element={<CancelSale />} />
       </Route>
+      
+      
+      <Route path="/acesso-negado" element={<NegatedAcess />} />
     </Routes>
   );
 };
