@@ -4,7 +4,7 @@ import { Header } from "../../../components/Header";
 export const Analysis: React.FC = () => {
     const redirectToDashboard = () => {
         const company_id = localStorage.getItem("company_id")
-        let analysisWindow = window.open(`http://localhost:3333/analysis`, "_blank");
+        let analysisWindow = window.open(`http://localhost:3333/analysis/${company_id}`, "_blank");
     
         setTimeout(() => {
           if (analysisWindow && !analysisWindow.closed) {
