@@ -33,12 +33,15 @@ const EmployeesList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const [company_id, setCompanyId] = useState<number | null>(null);
+  const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
 
   useEffect(() => {
     const loadCompanyId = async () => {
       try {
         const company_id = Number(localStorage.getItem("company_id"));
         setCompanyId(company_id);
+        const userId = Number(localStorage.getItem("id")); // Obtendo o ID do usuário logado
+        setLoggedUserId(userId);
       } catch (error) {
         setError("Erro ao buscar ID da empresa");
       }
@@ -86,7 +89,7 @@ const EmployeesList: React.FC = () => {
   const handleDelete = async (id: any) => {
     await deleteFunction(id, navigate);
   };
-
+  
   return (
     <div className="p-4">
       <Header showIcon={true} backRoute="/main" />
@@ -118,8 +121,11 @@ const EmployeesList: React.FC = () => {
                     >
                       <i className="fas fa-edit"></i>
                     </Link>
+                    <div className={`${
+                        loggedUserId === employee.id ? "hidden" : ""
+                      }`}>
                     <button
-                      className="text-neutral-500 hover:text-purple-800"
+                      className={`text-neutral-500 hover:text-purple-800`}
                       onClick={() => {
                         const confirmed = window.confirm(
                           `Você quer mesmo deletar ${employee.name}?`
@@ -131,6 +137,7 @@ const EmployeesList: React.FC = () => {
                     >
                       <i className="fas fa-trash"></i>
                     </button>
+                    </div>
                   </div>
                 </li>
               </Link>

@@ -36,11 +36,12 @@ export const Login: React.FC = () => {
       const response = await axios.post(`${API_URL}/users/login`, data);
       if (response.status === 200) {
         const { token } = response.data;
-        const { company_id, code } = response.data.user;
+        const { company_id, code, id } = response.data.user;
 
         localStorage.setItem("authToken", token);
         localStorage.setItem("company_id", company_id);
         localStorage.setItem("code", code);
+        localStorage.setItem("id", id);
         toast.success("Usuário logado com sucesso!");
 
         signIn({
