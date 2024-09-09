@@ -37,6 +37,7 @@ export const ValidationUserSchema = yup.object().shape({
 export const Register: React.FC = () => {
   const navigate = useNavigate();
   const [profession, setProfession] = useState<string>("");
+  const company_id = localStorage.getItem("company_id");
 
   const formik = useFormik({
     initialValues: {
@@ -48,7 +49,7 @@ export const Register: React.FC = () => {
       cpf: "",
       phone: "",
       education: "",
-      company_id: "",
+      company_id: String(company_id),
     },
     validationSchema: ValidationUserSchema,
     onSubmit: async (values) => {
@@ -241,9 +242,8 @@ export const Register: React.FC = () => {
             <div className="col-span-2 -mt-6 flex justify-center">
               <TextInput
                 title="ID da Empresa*"
-                placeholder="Digite o ID da empresa"
+                placeholder="ID da empresa"
                 value={formik.values.company_id}
-                onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 name="company_id"
                 className={`w-full ${
